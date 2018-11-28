@@ -27,23 +27,31 @@ import java.util.List;
 public class GroupsActivity extends AppCompatActivity {
 
     // Constants
+    /**
+     * TAG's constants are used for debugging purposes.
+     * We use them as the first parameters in Log.x methods to indicate the class name.
+     */
     private static final String TAG = GroupsActivity.class.getName();
+    /**
+     * This constant is the request code that is used to start the sign in activity.
+     * It can be any integer.
+     * We use it in two places:
+     *  1. When we start the sign in activity we pass as the request code in the 'startActivityForResults' method
+     *  2. In the 'onActivityResult' method to check whether we are returning from the sing in activity or from another activity
+     */
     private static final int RC_SIGN_IN = 1;
-    //
+
 
     // Views
+    /* ----- Before signing in ----- */
+    private LinearLayout signinLinearLayout;
+    private TextView signinErrorTextView;
+    private Button signinButton;
+    /* -----                   ----- */
 
-    // Before signing in
-        private LinearLayout signinLinearLayout;
-        private TextView signinErrorTextView;
-        private Button signinButton;
-    //
-
-    // After signing in
-        private RecyclerView groupsRecyclerView;
-    //
-
-    //
+    /* ----- After signing in ----- */
+    private RecyclerView groupsRecyclerView;
+    /* -----                  ----- */
 
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user;
@@ -53,10 +61,12 @@ public class GroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
         setupViews();
-        if (auth.getCurrentUser() == null)
+        if (auth.getCurrentUser() == null) // User is not signed in
             setupViewsForSignIn(null);
-        else
+        else { // User is signed in
+            user = auth.getCurrentUser();
             setupViewsForGroups();
+        }
     }
 
     @Override
@@ -69,7 +79,7 @@ public class GroupsActivity extends AppCompatActivity {
                 setupViewsForGroups();
             } else {
                 int messageId = R.string.sign_in_message;
-                if (response != null)
+                if (response != null && response.getError() != null)
                     if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK)
                         messageId = R.string.connection_error;
                     else
@@ -79,19 +89,28 @@ public class GroupsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * A helper method that initializes all UI properties.
+     */
     private void setupViews() {
-        signinLinearLayout = (LinearLayout) findViewById(R.id.ll_sign_in);
-        signinErrorTextView = (TextView) findViewById(R.id.tv_sign_in_error);
-        signinButton = (Button) findViewById(R.id.btn_sign_in);
+        signinLinearLayout = findViewById(R.id.ll_sign_in);
+        signinErrorTextView = findViewById(R.id.tv_sign_in_error);
+        signinButton = findViewById(R.id.btn_sign_in);
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
             }
         });
-        groupsRecyclerView = (RecyclerView) findViewById(R.id.rv_groups);
+        groupsRecyclerView = findViewById(R.id.rv_groups);
     }
 
+    /**
+     * A helper method that hides views that are only for signed in users, and displays views for anonymous users.
+     * @param errorMessage The message that needs to be displayed to the user.
+     *                     If set to null, then the default message is displayed -which asks the user to sign in-
+     *                     instead of the error message.
+     */
     private void setupViewsForSignIn(String errorMessage) {
         groupsRecyclerView.setVisibility(View.GONE);
         signinLinearLayout.setVisibility(View.VISIBLE);
@@ -99,18 +118,26 @@ public class GroupsActivity extends AppCompatActivity {
         signinErrorTextView.setText(text);
     }
 
+    /**
+     * A helper method that displays views that are only for signed in users, and hides views for anonymous users.
+     * After that, this method loads all groups that the user is a member in.
+     */
     private void setupViewsForGroups() {
         signinLinearLayout.setVisibility(View.GONE);
         groupsRecyclerView.setVisibility(View.VISIBLE);
         loadGroups();
     }
 
+    /**
+     * A helper method that displays the sign in wizard.
+     */
     private void signIn() {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build());
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(providers).build(), RC_SIGN_IN);
+        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), RC_SIGN_IN);
     }
 
+    /**
+     * A helper method for loading groups into the recycler view.
+     */
     private void loadGroups() {
 
     }
