@@ -140,9 +140,9 @@ public class GroupsActivity extends AppCompatActivity {
      * A helper method for loading groups into the recycler view.
      */
     private void loadGroups() {
-        // Query for groups the user is member in
+        // Query for groups the user is a member in
         Query userGroups = database.getReference().child(DBConstants.usersPath).child(user.getUid()).child(DBConstants.userGroupsKey);
-        
+
     }
 
 }
