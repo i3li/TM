@@ -53,6 +53,7 @@ public class GroupsActivity extends AppCompatActivity {
     private RecyclerView groupsRecyclerView;
     /* -----                  ----- */
 
+    private  FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user;
 
@@ -139,7 +140,9 @@ public class GroupsActivity extends AppCompatActivity {
      * A helper method for loading groups into the recycler view.
      */
     private void loadGroups() {
-
+        // Query for groups the user is member in
+        Query userGroups = database.getReference().child(DBConstants.usersPath).child(user.getUid()).child(DBConstants.userGroupsKey);
+        
     }
 
 }

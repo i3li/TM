@@ -8,5 +8,6 @@ final class DBConstants {
 
     static final String groupsPath = "groups";
     static final String usersPath = "users";
+    static final String userGroupsKey = "groups";
 
 }
