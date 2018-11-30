@@ -4,4 +4,5 @@
     <string name="sign_in_message">Please sign in to view your groups.</string>
     <string name="general_error">An error occurred, please try again.</string>
     <string name="connection_error">Please check your internet connection and try again.</string>
+    <string name="no_tasks">There are no tasks.\nCreate the first task by tapping the + button down below.</string>
 </resources>
