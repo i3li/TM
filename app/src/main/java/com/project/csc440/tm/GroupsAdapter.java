@@ -34,7 +34,7 @@ class GroupsAdapter extends FirebaseRecyclerAdapter<Group, GroupsAdapter.GroupHo
     @NonNull
     @Override
     public GroupHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_recyclerview_group, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_group, viewGroup, false);
         return new GroupHolder(view);
     }
 
