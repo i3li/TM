@@ -1,12 +1,15 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,8 +18,11 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
@@ -56,6 +62,7 @@ public class GroupsActivity extends AppCompatActivity {
     private  FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user;
+    private GroupsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +95,20 @@ public class GroupsActivity extends AppCompatActivity {
                 setupViewsForSignIn(getString(messageId));
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (adapter != null)
+            adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter != null)
+            adapter.stopListening();
     }
 
     /**
@@ -141,8 +162,13 @@ public class GroupsActivity extends AppCompatActivity {
      */
     private void loadGroups() {
         // Query for groups the user is a member in
-        Query userGroups = database.getReference().child(DBConstants.usersPath).child(user.getUid()).child(DBConstants.userGroupsKey);
-
+        Query userGroupsQuery = database.getReference().child(DBConstants.usersPath).child(user.getUid()).child(DBConstants.userGroupsKey);
+        DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
+        FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
+        adapter = new GroupsAdapter(options);
+        groupsRecyclerView.setAdapter(adapter);
+        groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter.startListening();
     }
 
 }
