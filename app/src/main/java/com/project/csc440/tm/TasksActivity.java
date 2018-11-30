@@ -93,6 +93,13 @@ public class TasksActivity extends AppCompatActivity {
      */
     private void loadTasks() {
         // Query for tasks that in the group
+        Query TasksQuery = database.getReference().child(DBConstants.groupTasksPath).child(groupKey).child(DBConstants.groupTasksTasksKey);
+        DatabaseReference tasksRef = database.getReference().child(DBConstants.tasksPath);
+        FirebaseRecyclerOptions<Task> options = new FirebaseRecyclerOptions.Builder<Task>().setIndexedQuery(TasksQuery, tasksRef, Task.class).build();
+        adapter = new TasksAdapter(options);
+        tasksRecyclerView.setAdapter(adapter);
+        tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter.startListening();
     }
 
 }
