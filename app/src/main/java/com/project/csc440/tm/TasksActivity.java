@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -40,6 +41,7 @@ public class TasksActivity extends AppCompatActivity {
 
     /* ----- Not empty list of tasks ----- */
     private RecyclerView tasksRecyclerView;
+    private ProgressBar tasksProgressBar;
     /* -----                         ----- */
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -71,6 +73,7 @@ public class TasksActivity extends AppCompatActivity {
     private void setupViews() {
         noTasksTextView = findViewById(R.id.tv_no_tasks);
         tasksRecyclerView = findViewById(R.id.rv_tasks);
+        tasksProgressBar = findViewById(R.id.pb_tasks);
     }
 
     /**
@@ -78,6 +81,7 @@ public class TasksActivity extends AppCompatActivity {
      */
     private void setupViewsForEmptyList() {
         tasksRecyclerView.setVisibility(View.GONE);
+        tasksProgressBar.setVisibility(View.GONE);
         noTasksTextView.setVisibility(View.VISIBLE);
     }
 
@@ -88,6 +92,7 @@ public class TasksActivity extends AppCompatActivity {
     private void setupViewsForTasks() {
         noTasksTextView.setVisibility(View.GONE);
         tasksRecyclerView.setVisibility(View.VISIBLE);
+        tasksProgressBar.setVisibility(View.VISIBLE);
         loadTasks();
     }
 
@@ -100,6 +105,14 @@ public class TasksActivity extends AppCompatActivity {
         DatabaseReference tasksRef = database.getReference().child(DBConstants.tasksPath);
         FirebaseRecyclerOptions<Task> options = new FirebaseRecyclerOptions.Builder<Task>().setIndexedQuery(TasksQuery, tasksRef, Task.class).build();
         adapter = new TasksAdapter(options);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                tasksProgressBar.setVisibility(View.GONE);
+                adapter.unregisterAdapterDataObserver(this);
+            }
+        });
         tasksRecyclerView.setAdapter(adapter);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();

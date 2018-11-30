@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
 
     /* ----- After signing in ----- */
     private RecyclerView groupsRecyclerView;
+    private ProgressBar groupsProgressBar;
     /* -----                  ----- */
 
     private  FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -125,6 +127,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
             }
         });
         groupsRecyclerView = findViewById(R.id.rv_groups);
+        groupsProgressBar = findViewById(R.id.pb_groups);
     }
 
     /**
@@ -135,6 +138,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
      */
     private void setupViewsForSignIn(String errorMessage) {
         groupsRecyclerView.setVisibility(View.GONE);
+        groupsProgressBar.setVisibility(View.GONE);
         signinLinearLayout.setVisibility(View.VISIBLE);
         String text = errorMessage == null ? getString(R.string.sign_in_message) : errorMessage;
         signinErrorTextView.setText(text);
@@ -147,6 +151,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     private void setupViewsForGroups() {
         signinLinearLayout.setVisibility(View.GONE);
         groupsRecyclerView.setVisibility(View.VISIBLE);
+        groupsProgressBar.setVisibility(View.VISIBLE);
         loadGroups();
     }
 
@@ -166,6 +171,14 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
         FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
         adapter = new GroupsAdapter(options, this);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                groupsProgressBar.setVisibility(View.GONE);
+                adapter.unregisterAdapterDataObserver(this);
+            }
+        });
         groupsRecyclerView.setAdapter(adapter);
         groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();
