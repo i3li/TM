@@ -20,7 +20,7 @@ public class Group {
     }
 
     public void setAdmin(String admin) {
-        this.name = admin;
+        this.admin = admin;
     }
 
 }
