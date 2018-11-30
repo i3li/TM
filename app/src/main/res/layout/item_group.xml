@@ -8,6 +8,7 @@ android:orientation="vertical">
     android:layout_height="wrap_content">
 
     <TextView
+        android:id="@+id/tv_group_first_letter"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:textSize="32sp"
@@ -31,6 +32,6 @@ android:orientation="vertical">
 <View
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="?android:attr/dividerVertical"/>
+    android:background="?android:attr/dividerVertical" />
 
 </LinearLayout>

@@ -14,14 +14,17 @@ class GroupsAdapter extends FirebaseRecyclerAdapter<Group, GroupsAdapter.GroupHo
 
     class GroupHolder extends RecyclerView.ViewHolder {
 
+        private TextView firstLetterTextView;
         private TextView nameTextView;
 
         GroupHolder(@NonNull View itemView) {
             super(itemView);
+            firstLetterTextView = itemView.findViewById(R.id.tv_group_first_letter);
             nameTextView = itemView.findViewById(R.id.tv_group_name);
         }
 
         void setName(String name) {
+            firstLetterTextView.setText(name.substring(0, 1));
             nameTextView.setText(name);
         }
 
