@@ -172,9 +172,10 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     }
 
     @Override
-    public void onGroupItemClick(String groupKey) {
+    public void onGroupItemClick(String groupKey, String groupName) {
         Intent intent = new Intent(this, TasksActivity.class);
         intent.putExtra(TasksActivity.GROUP_KEY_KEY, groupKey);
+        intent.putExtra(TasksActivity.GROUP_NAME_KEY, groupName);
         startActivity(intent);
     }
 }

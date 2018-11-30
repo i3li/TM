@@ -28,9 +28,10 @@ public class TasksActivity extends AppCompatActivity {
     private static final String TAG = TasksActivity.class.getName();
 
     /**
-     * This constant is used to pass the key for the group. It is used by the caller activity to pass the group key.
+     * These constant is used to pass data from the prev activity. It is used by the caller activity to pass the group key and group name.
      */
     public static final String GROUP_KEY_KEY = "_group_key_";
+    public static final String GROUP_NAME_KEY = "_group_name_";
 
     // Views
     /* ------- Empty list of tasks ------- */
@@ -56,6 +57,8 @@ public class TasksActivity extends AppCompatActivity {
         setupViews();
         Intent intent = getIntent();
         if (intent.hasExtra(GROUP_KEY_KEY)) {
+            if (intent.hasExtra(GROUP_NAME_KEY))
+                setTitle(intent.getStringExtra(GROUP_NAME_KEY));
             groupKey = intent.getStringExtra(GROUP_KEY_KEY);
             setupViewsForTasks();
         } else

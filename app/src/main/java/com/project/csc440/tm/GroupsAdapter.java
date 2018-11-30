@@ -13,7 +13,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 class GroupsAdapter extends FirebaseRecyclerAdapter<Group, GroupsAdapter.GroupHolder> {
 
     interface GroupItemClickListener {
-        void onGroupItemClick(String groupKey);
+        void onGroupItemClick(String groupKey, String groupName);
     }
 
     private final GroupItemClickListener groupItemClickListener;
@@ -38,7 +38,8 @@ class GroupsAdapter extends FirebaseRecyclerAdapter<Group, GroupsAdapter.GroupHo
         @Override
         public void onClick(View v) {
             int clickedPos = getAdapterPosition();
-            groupItemClickListener.onGroupItemClick(getRef(clickedPos).getKey());
+            TextView clickedGroupNameTextView = v.findViewById(R.id.tv_group_name);
+            groupItemClickListener.onGroupItemClick(getRef(clickedPos).getKey(), clickedGroupNameTextView.getText().toString());
         }
     }
 
