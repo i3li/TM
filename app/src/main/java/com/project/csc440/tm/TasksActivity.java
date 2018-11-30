@@ -1,9 +1,11 @@
 package com.project.csc440.tm;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -25,6 +27,11 @@ public class TasksActivity extends AppCompatActivity {
      */
     private static final String TAG = TasksActivity.class.getName();
 
+    /**
+     * This constant is used to pass the key for the group. It is used by the caller activity to pass the group key.
+     */
+    public static final String GROUP_KEY_KEY = "_group_key_";
+
     // Views
     /* ------- Empty list of tasks ------- */
     private TextView noTasksTextView;
@@ -37,10 +44,22 @@ public class TasksActivity extends AppCompatActivity {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private TasksAdapter adapter;
 
+    /**
+     * The key for the current group.
+     */
+    private String groupKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+        setupViews();
+        Intent intent = getIntent();
+        if (intent.hasExtra(GROUP_KEY_KEY)) {
+            groupKey = intent.getStringExtra(GROUP_KEY_KEY);
+            setupViewsForTasks();
+        } else
+            Log.e(TAG, "The group key must be passed in.");
     }
 
     /**
@@ -74,7 +93,6 @@ public class TasksActivity extends AppCompatActivity {
      */
     private void loadTasks() {
         // Query for tasks that in the group
-
     }
 
 }
