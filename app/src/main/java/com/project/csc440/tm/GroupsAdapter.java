@@ -12,7 +12,13 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 class GroupsAdapter extends FirebaseRecyclerAdapter<Group, GroupsAdapter.GroupHolder> {
 
-    class GroupHolder extends RecyclerView.ViewHolder {
+    interface GroupItemClickListener {
+        void onGroupItemClick(String groupKey);
+    }
+
+    private final GroupItemClickListener groupItemClickListener;
+
+    class GroupHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView firstLetterTextView;
         private TextView nameTextView;
@@ -21,6 +27,7 @@ class GroupsAdapter extends FirebaseRecyclerAdapter<Group, GroupsAdapter.GroupHo
             super(itemView);
             firstLetterTextView = itemView.findViewById(R.id.tv_group_first_letter);
             nameTextView = itemView.findViewById(R.id.tv_group_name);
+            itemView.setOnClickListener(this);
         }
 
         void setName(String name) {
@@ -28,10 +35,16 @@ class GroupsAdapter extends FirebaseRecyclerAdapter<Group, GroupsAdapter.GroupHo
             nameTextView.setText(name);
         }
 
+        @Override
+        public void onClick(View v) {
+            int clickedPos = getAdapterPosition();
+            groupItemClickListener.onGroupItemClick(getRef(clickedPos).getKey());
+        }
     }
 
-    GroupsAdapter(@NonNull FirebaseRecyclerOptions<Group> options) {
+    GroupsAdapter(@NonNull FirebaseRecyclerOptions<Group> options, GroupItemClickListener groupItemClickListener) {
         super(options);
+        this.groupItemClickListener = groupItemClickListener;
     }
 
     @NonNull

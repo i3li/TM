@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GroupsActivity extends AppCompatActivity {
+public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.GroupItemClickListener {
 
     // Constants
     /**
@@ -165,10 +165,16 @@ public class GroupsActivity extends AppCompatActivity {
         Query userGroupsQuery = database.getReference().child(DBConstants.usersPath).child(user.getUid()).child(DBConstants.userGroupsKey);
         DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
         FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
-        adapter = new GroupsAdapter(options);
+        adapter = new GroupsAdapter(options, this);
         groupsRecyclerView.setAdapter(adapter);
         groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();
     }
 
+    @Override
+    public void onGroupItemClick(String groupKey) {
+        Intent intent = new Intent(this, TasksActivity.class);
+        intent.putExtra(TasksActivity.GROUP_KEY_KEY, groupKey);
+        startActivity(intent);
+    }
 }
