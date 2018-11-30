@@ -16,7 +16,7 @@ android:orientation="vertical">
         android:layout_marginRight="8dp"
         android:text="G"
         android:gravity="center"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorAccent"
         android:textColor="#FFF" />
 
     <TextView
