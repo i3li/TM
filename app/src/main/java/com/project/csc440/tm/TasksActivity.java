@@ -1,6 +1,7 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,9 +40,10 @@ public class TasksActivity extends AppCompatActivity {
     private TextView noTasksTextView;
     /* -----                         ----- */
 
-    /* ----- Not empty list of tasks ----- */
+    /* ----- Non empty list of tasks ----- */
     private RecyclerView tasksRecyclerView;
     private ProgressBar tasksProgressBar;
+    private FloatingActionButton addTaskButton;
     /* -----                         ----- */
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -74,6 +76,7 @@ public class TasksActivity extends AppCompatActivity {
         noTasksTextView = findViewById(R.id.tv_no_tasks);
         tasksRecyclerView = findViewById(R.id.rv_tasks);
         tasksProgressBar = findViewById(R.id.pb_tasks);
+        addTaskButton = findViewById(R.id.fab_add_task);
     }
 
     /**
@@ -82,6 +85,7 @@ public class TasksActivity extends AppCompatActivity {
     private void setupViewsForEmptyList() {
         tasksRecyclerView.setVisibility(View.GONE);
         tasksProgressBar.setVisibility(View.GONE);
+        addTaskButton.hide();
         noTasksTextView.setVisibility(View.VISIBLE);
     }
 
@@ -93,6 +97,7 @@ public class TasksActivity extends AppCompatActivity {
         noTasksTextView.setVisibility(View.GONE);
         tasksRecyclerView.setVisibility(View.VISIBLE);
         tasksProgressBar.setVisibility(View.VISIBLE);
+        addTaskButton.show();
         loadTasks();
     }
 

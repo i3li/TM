@@ -3,6 +3,7 @@ package com.project.csc440.tm;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,6 +60,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     /* ----- After signing in ----- */
     private RecyclerView groupsRecyclerView;
     private ProgressBar groupsProgressBar;
+    private FloatingActionButton addGroupButton;
     /* -----                  ----- */
 
     private  FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -113,6 +115,14 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
             adapter.stopListening();
     }
 
+    @Override
+    public void onGroupItemClick(String groupKey, String groupName) {
+        Intent intent = new Intent(this, TasksActivity.class);
+        intent.putExtra(TasksActivity.GROUP_KEY_KEY, groupKey);
+        intent.putExtra(TasksActivity.GROUP_NAME_KEY, groupName);
+        startActivity(intent);
+    }
+
     /**
      * A helper method that initializes all UI properties.
      */
@@ -128,6 +138,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         });
         groupsRecyclerView = findViewById(R.id.rv_groups);
         groupsProgressBar = findViewById(R.id.pb_groups);
+        addGroupButton = findViewById(R.id.fab_add_group);
     }
 
     /**
@@ -139,6 +150,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     private void setupViewsForSignIn(String errorMessage) {
         groupsRecyclerView.setVisibility(View.GONE);
         groupsProgressBar.setVisibility(View.GONE);
+        addGroupButton.hide();
         signinLinearLayout.setVisibility(View.VISIBLE);
         String text = errorMessage == null ? getString(R.string.sign_in_message) : errorMessage;
         signinErrorTextView.setText(text);
@@ -152,6 +164,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         signinLinearLayout.setVisibility(View.GONE);
         groupsRecyclerView.setVisibility(View.VISIBLE);
         groupsProgressBar.setVisibility(View.VISIBLE);
+        addGroupButton.show();
         loadGroups();
     }
 
@@ -184,11 +197,4 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         adapter.startListening();
     }
 
-    @Override
-    public void onGroupItemClick(String groupKey, String groupName) {
-        Intent intent = new Intent(this, TasksActivity.class);
-        intent.putExtra(TasksActivity.GROUP_KEY_KEY, groupKey);
-        intent.putExtra(TasksActivity.GROUP_NAME_KEY, groupName);
-        startActivity(intent);
-    }
 }
