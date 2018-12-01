@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
 
 
     // Views
+    private Toolbar toolbar;
     /* ----- Before signing in ----- */
     private LinearLayout signinLinearLayout;
     private TextView signinErrorTextView;
@@ -129,6 +131,9 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
      * A helper method that initializes all UI properties.
      */
     private void setupViews() {
+        toolbar = findViewById(R.id.tb_groups);
+        setSupportActionBar(toolbar);
+
         signinLinearLayout = findViewById(R.id.ll_sign_in);
         signinErrorTextView = findViewById(R.id.tv_sign_in_error);
         signinButton = findViewById(R.id.btn_sign_in);

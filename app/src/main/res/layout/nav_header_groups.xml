@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="192dp"
+    android:background="?attr/colorPrimaryDark"
+    android:padding="16dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:src="@drawable/user_profile_default"
+        android:layout_margin="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ali Alzaidi"
+        android:textColor="#FFF"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="i3li.xz@gmail.com"
+        android:textColor="#9fffffff"
+        android:textSize="14sp" />
+
+</LinearLayout>
