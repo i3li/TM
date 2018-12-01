@@ -69,6 +69,20 @@ public class TasksActivity extends AppCompatActivity {
             Log.e(TAG, "The group key must be passed in.");
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (adapter != null)
+            adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter != null)
+            adapter.stopListening();
+    }
+
     /**
      * A helper method that initializes all UI properties.
      */
