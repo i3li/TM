@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -56,6 +59,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
 
     // Views
     private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
     /* ----- Before signing in ----- */
     private LinearLayout signinLinearLayout;
     private TextView signinErrorTextView;
@@ -107,6 +111,16 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (adapter != null)
@@ -138,6 +152,8 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        drawerLayout = findViewById(R.id.dl_groups);
 
         signinLinearLayout = findViewById(R.id.ll_sign_in);
         signinErrorTextView = findViewById(R.id.tv_sign_in_error);
