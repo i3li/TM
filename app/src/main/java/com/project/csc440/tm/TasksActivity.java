@@ -2,10 +2,12 @@ package com.project.csc440.tm;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +38,7 @@ public class TasksActivity extends AppCompatActivity {
     public static final String GROUP_NAME_KEY = "_group_name_";
 
     // Views
+    private Toolbar toolbar;
     /* ------- Empty list of tasks ------- */
     private TextView noTasksTextView;
     /* -----                         ----- */
@@ -83,10 +86,23 @@ public class TasksActivity extends AppCompatActivity {
             adapter.stopListening();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     /**
      * A helper method that initializes all UI properties.
      */
     private void setupViews() {
+        // Toolbar setup
+        toolbar = findViewById(R.id.tb_tasks);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
         noTasksTextView = findViewById(R.id.tv_no_tasks);
         tasksRecyclerView = findViewById(R.id.rv_tasks);
         tasksProgressBar = findViewById(R.id.pb_tasks);

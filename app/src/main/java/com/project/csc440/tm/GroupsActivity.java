@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -131,8 +132,12 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
      * A helper method that initializes all UI properties.
      */
     private void setupViews() {
+        // Toolbar setup
         toolbar = findViewById(R.id.tb_groups);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         signinLinearLayout = findViewById(R.id.ll_sign_in);
         signinErrorTextView = findViewById(R.id.tv_sign_in_error);
