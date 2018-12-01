@@ -183,6 +183,8 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
      *                     instead of the error message.
      */
     private void setupViewsForSignIn(String errorMessage) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         if (adapter != null)
             adapter.stopListening();
         groupsRecyclerView.setVisibility(View.GONE);
@@ -198,6 +200,8 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
      * After that, this method loads all groups that the user is a member in.
      */
     private void setupViewsForGroups() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         signinLinearLayout.setVisibility(View.GONE);
         groupsRecyclerView.setVisibility(View.VISIBLE);
         groupsProgressBar.setVisibility(View.VISIBLE);
