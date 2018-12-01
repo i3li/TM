@@ -15,16 +15,16 @@
         android:layout_margin="8dp"/>
 
     <TextView
+        android:id="@+id/tv_user_display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ali Alzaidi"
         android:textColor="#FFF"
         android:textSize="20sp" />
 
     <TextView
+        android:id="@+id/tv_user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="i3li.xz@gmail.com"
         android:textColor="#9fffffff"
         android:textSize="14sp" />
 

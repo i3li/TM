@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -70,11 +71,14 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     private RecyclerView groupsRecyclerView;
     private ProgressBar groupsProgressBar;
     private FloatingActionButton addGroupButton;
+    private NavigationView navView;
+    private TextView userDisplayNameTextView;
+    private TextView userEmailTextView;
     /* -----                  ----- */
 
     private  FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseUser user;
+    private FirebaseUser user = auth.getCurrentUser();
     private GroupsAdapter adapter;
 
     @Override
@@ -174,6 +178,11 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
                 signOut();
             }
         });
+
+        navView = findViewById(R.id.nav_view_groups);
+        View headerView = navView.getHeaderView(0);
+        userDisplayNameTextView = headerView.findViewById(R.id.tv_user_display_name);
+        userEmailTextView = headerView.findViewById(R.id.tv_user_email);
     }
 
     /**
@@ -202,6 +211,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     private void setupViewsForGroups() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        loadDrawer();
         signinLinearLayout.setVisibility(View.GONE);
         groupsRecyclerView.setVisibility(View.VISIBLE);
         groupsProgressBar.setVisibility(View.VISIBLE);
@@ -248,6 +258,14 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         groupsRecyclerView.setAdapter(adapter);
         groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();
+    }
+
+    /**
+     * A helper method for loading user info into the drawer.
+     */
+    private void loadDrawer() {
+        userDisplayNameTextView.setText(user.getDisplayName());
+        userEmailTextView.setText(user.getEmail());
     }
 
 }
