@@ -22,6 +22,8 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -133,12 +135,19 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO This need to be changed to add group not sign out!
                 signIn();
             }
         });
         groupsRecyclerView = findViewById(R.id.rv_groups);
         groupsProgressBar = findViewById(R.id.pb_groups);
         addGroupButton = findViewById(R.id.fab_add_group);
+        addGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
     }
 
     /**
@@ -148,6 +157,8 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
      *                     instead of the error message.
      */
     private void setupViewsForSignIn(String errorMessage) {
+        if (adapter != null)
+            adapter.stopListening();
         groupsRecyclerView.setVisibility(View.GONE);
         groupsProgressBar.setVisibility(View.GONE);
         addGroupButton.hide();
@@ -173,6 +184,18 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
      */
     private void signIn() {
         startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), RC_SIGN_IN);
+    }
+
+    /**
+     * A helper method that signs the signed in user out.
+     */
+    private void signOut() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                setupViewsForSignIn(null);
+            }
+        });
     }
 
     /**
