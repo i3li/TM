@@ -50,15 +50,21 @@ public class CreateGroupActivity extends TMActivity {
     }
 
     private boolean validateTextFields() {
-        String name = nameEditText.getText().toString().trim();
-        String desc = descEditText.getText().toString().trim();
+        String name = nameEditText.getText().toString();
+        String desc = descEditText.getText().toString();
         Boolean flag = true;
-        if (name.length() == 0 || name.length() > MAX_LENGTH_GROUP_NAME) {
+        if (name.trim().length() == 0) {
+            nameEditText.setError(getString(R.string.empty_filed_error));
+            flag = false;
+        } else if (name.length() > MAX_LENGTH_GROUP_NAME) {
             nameEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_GROUP_NAME);
             flag = false;
         }
-        if (desc.length() == 0 || desc.length() > MAX_LENGTH_GROUP_DESC) {
+        if (desc.trim().length() == 0) {
             descEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_GROUP_DESC);
+            flag = false;
+        } else if (desc.length() > MAX_LENGTH_GROUP_DESC) {
+            descEditText.setError(getString(R.string.empty_filed_error));
             flag = false;
         }
         return flag;

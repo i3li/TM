@@ -14,5 +14,6 @@
     <string name="create_group_title">Create Group</string>
     <string name="create_task_title">Create Task</string>
     <string name="create">Create</string>
+    <string name="empty_filed_error">Please fill this field</string>
     <string name="max_char_limit_error">The maximum character limit is</string>
 </resources>
