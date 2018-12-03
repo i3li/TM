@@ -41,7 +41,6 @@ public class CreateGroupActivity extends TMActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_create_group:
-                // TODO: Implementation
                 onCreateGroupClick();
                 break;
         }
@@ -53,7 +52,7 @@ public class CreateGroupActivity extends TMActivity {
         descEditText = findViewById(R.id.et_group_desc);
     }
 
-    private boolean validateTextFields() {
+    private boolean validateFields() {
         String name = nameEditText.getText().toString();
         String desc = descEditText.getText().toString();
         Boolean flag = true;
@@ -76,7 +75,7 @@ public class CreateGroupActivity extends TMActivity {
     }
 
     private void onCreateGroupClick() {
-        if (validateTextFields()) {
+        if (validateFields()) {
             Intent intent = new Intent();
             intent.putExtra(GROUP_NAME_KEY, nameEditText.getText().toString().trim());
             intent.putExtra(GROUP_DESC_KEY, descEditText.getText().toString().trim());

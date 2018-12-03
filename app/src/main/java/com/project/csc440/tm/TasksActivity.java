@@ -1,6 +1,9 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +17,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TasksActivity extends TMActivity {
 
@@ -74,6 +85,17 @@ public class TasksActivity extends TMActivity {
     @Override
     int getLayoutResource() {
         return R.layout.activity_tasks;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_CREATE_TASK) {
+            if (resultCode == RESULT_OK)
+                createTask(data.getStringExtra(CreateTaskActivity.TASK_NAME_KEY),
+                        data.getStringExtra(CreateTaskActivity.TASK_DETAILS_KEY),
+                        (Date) data.getSerializableExtra(CreateTaskActivity.TASK_DUE_DATE_KEY));
+        }
     }
 
     @Override
@@ -156,6 +178,54 @@ public class TasksActivity extends TMActivity {
     private void startCreateTaskActivity() {
         Intent intent = new Intent(this, CreateTaskActivity.class);
         startActivityForResult(intent, RC_CREATE_TASK);
+    }
+
+    private void createTask(String name, String details, Date dueDate) {
+        /* Two places for adding tasks
+        1. /tasks/
+        2. group_tasks/current_group_id/tasks
+         */
+
+        Task newTask = new Task(name, details, dueDate);
+
+        DatabaseReference tasksRef = database.getReference().child(DBConstants.tasksPath);
+        String newTaskKey = tasksRef.push().getKey();
+
+        // Paths
+        String tasksPath = DBConstants.tasksPath + "/" + newTaskKey;
+        String groupTasksPath = DBConstants.groupTasksPath + "/" + groupKey + "/" + DBConstants.groupTasksTasksKey + "/" + newTaskKey;
+
+        // To push in all places atomically
+        Map<String, Object> allInserts = new HashMap<>();
+        allInserts.put(tasksPath, newTask);
+        allInserts.put(groupTasksPath, true);
+
+        database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null)
+                    // There is an error
+                    handleDatabaseError(databaseError);
+                else
+                    handleSuccessfullOperation(getString(R.string.success_task_creation_message));
+            }
+        });
+    }
+
+    private void handleSuccessfullOperation(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void handleDatabaseError(DatabaseError error) {
+        int code = error.getCode();
+        @StringRes int userErrorMessageId = R.string.general_error;
+        switch (code) {
+            case DatabaseError.DISCONNECTED:
+            case DatabaseError.NETWORK_ERROR:
+                userErrorMessageId = R.string.connection_error;
+        }
+        String userErrorMessage = getString(userErrorMessageId);
+        Toast.makeText(this, userErrorMessage, Toast.LENGTH_LONG).show();
     }
 
 }

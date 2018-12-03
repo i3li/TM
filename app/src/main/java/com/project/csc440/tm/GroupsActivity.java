@@ -1,7 +1,6 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -12,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -254,7 +252,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
      */
     private void loadGroups() {
         // Query for groups the user is a member in
-        Query userGroupsQuery = database.getReference().child(DBConstants.userGroupsPath).child(user.getUid()).child(DBConstants.userGroupsKey);
+        Query userGroupsQuery = database.getReference().child(DBConstants.userGroupsPath).child(user.getUid()).child(DBConstants.userGroupsGroupsKey);
         DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
         FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
         adapter = new GroupsAdapter(options, this);
@@ -300,7 +298,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
 
         // Paths
         String groupsPath = DBConstants.groupsPath + "/" + newGroupKey;
-        String userGroupsPath = DBConstants.userGroupsPath + "/" + user.getUid() + "/" + DBConstants.userGroupsKey + "/" + newGroupKey;
+        String userGroupsPath = DBConstants.userGroupsPath + "/" + user.getUid() + "/" + DBConstants.userGroupsGroupsKey + "/" + newGroupKey;
 
         // To push in all places atomically
         Map<String, Object> allInserts = new HashMap<>();

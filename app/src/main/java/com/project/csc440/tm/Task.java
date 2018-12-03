@@ -2,19 +2,27 @@ package com.project.csc440.tm;
 
 //import java.util.Date;
 
+import java.util.Date;
+
 public class Task {
 
     private String name;
-    private String dueDate;
+    private Date dueDate;
     private String details;
 
     public Task() {}
+
+    public Task(String name, String details, Date dueDate) {
+        this.name = name;
+        this.details = details;
+        this.dueDate = dueDate;
+    }
 
     public String getName() {
         return name;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
@@ -26,7 +34,7 @@ public class Task {
         this.name = name;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 

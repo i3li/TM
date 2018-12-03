@@ -19,4 +19,6 @@
     <string name="success_group_creation_message">The group is successfully created</string>
     <string name="task_name_hint">Enter the task name</string>
     <string name="task_details_hint">Enter the task details</string>
+    <string name="past_due_date_error">The due date of a task must be in the future</string>
+    <string name="success_task_creation_message">The task is successfully created</string>
 </resources>
