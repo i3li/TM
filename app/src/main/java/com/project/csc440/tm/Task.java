@@ -7,12 +7,12 @@ import java.util.Date;
 public class Task {
 
     private String name;
-    private Date dueDate;
+    private Long dueDate; // It is the timestamp since midnight 1/1/1970 in UTC
     private String details;
 
     public Task() {}
 
-    public Task(String name, String details, Date dueDate) {
+    public Task(String name, String details, Long dueDate) {
         this.name = name;
         this.details = details;
         this.dueDate = dueDate;
@@ -22,7 +22,7 @@ public class Task {
         return name;
     }
 
-    public Date getDueDate() {
+    public Long getDueDate() {
         return dueDate;
     }
 
@@ -34,7 +34,7 @@ public class Task {
         this.name = name;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(Long dueDate) {
         this.dueDate = dueDate;
     }
 
