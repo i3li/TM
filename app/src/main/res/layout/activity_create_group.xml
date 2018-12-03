@@ -9,10 +9,11 @@
 
     <include layout="@layout/toolbar_main" />
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/et_group_name"
@@ -20,6 +21,12 @@
             android:layout_height="wrap_content"
             android:hint="@string/grou_name_hint" />
 
-    </FrameLayout>
+        <EditText
+            android:id="@+id/et_group_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/grou_desc_hint" />
+
+    </LinearLayout>
 
 </LinearLayout>
