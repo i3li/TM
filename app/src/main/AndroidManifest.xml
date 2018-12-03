@@ -21,8 +21,8 @@
         <activity android:name=".TasksActivity" />
         <activity android:name=".CreateTaskActivity" />
         <activity android:name=".CreateGroupActivity" />
-        <activity android:name=".edit_task" />
-        <activity android:name=".edit_group"></activity>
+        <activity android:name=".EditTaskActivity" />
+        <activity android:name=".EditGroupActivity"></activity>
     </application>
 
 </manifest>
