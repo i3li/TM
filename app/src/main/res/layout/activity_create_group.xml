@@ -5,12 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CreateGroupActivity"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/et_group_name"
+    <include layout="@layout/toolbar_main" />
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/grou_name_hint" />
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/et_group_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/grou_name_hint" />
+
+    </FrameLayout>
 
 </LinearLayout>
