@@ -30,6 +30,7 @@ public class TasksActivity extends TMActivity {
      * We use them as the first parameters in Log.x methods to indicate the class name.
      */
     private static final String TAG = "TasksActivity";
+    private static final int RC_CREATE_TASK = 1;
 
     /**
      * These constant is used to pass data from the prev activity. It is used by the caller activity to pass the group key and group name.
@@ -97,6 +98,12 @@ public class TasksActivity extends TMActivity {
         tasksRecyclerView = findViewById(R.id.rv_tasks);
         tasksProgressBar = findViewById(R.id.pb_tasks);
         addTaskButton = findViewById(R.id.fab_add_task);
+        addTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCreateTaskActivity();
+            }
+        });
     }
 
     /**
@@ -141,6 +148,14 @@ public class TasksActivity extends TMActivity {
         tasksRecyclerView.setAdapter(adapter);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();
+    }
+
+    /**
+     * A helper method for handling 'create task' event.
+     */
+    private void startCreateTaskActivity() {
+        Intent intent = new Intent(this, CreateTaskActivity.class);
+        startActivityForResult(intent, RC_CREATE_TASK);
     }
 
 }
