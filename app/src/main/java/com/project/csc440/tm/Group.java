@@ -8,6 +8,18 @@ public class Group {
 
     public Group() {}
 
+    public Group(String name, String description, String admin) {
+        this.name = name;
+        this.description = description;
+        this.admin = admin;
+    }
+
+    public Group(String name, String admin) {
+        this.name = name;
+        this.description = "";
+        this.admin = admin;
+    }
+
     public String getName() {
         return name;
     }

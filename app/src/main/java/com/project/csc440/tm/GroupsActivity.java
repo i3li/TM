@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,9 +26,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupItemClickListener {
 
@@ -66,7 +71,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     private TextView userEmailTextView;
     /* -----                  ----- */
 
-    private  FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
     private GroupsAdapter adapter;
@@ -246,7 +251,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
      */
     private void loadGroups() {
         // Query for groups the user is a member in
-        Query userGroupsQuery = database.getReference().child(DBConstants.usersPath).child(user.getUid()).child(DBConstants.userGroupsKey);
+        Query userGroupsQuery = database.getReference().child(DBConstants.userGroupsPath).child(user.getUid()).child(DBConstants.userGroupsKey);
         DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
         FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
         adapter = new GroupsAdapter(options, this);
@@ -280,7 +285,31 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     }
 
     private void createGroup(String name, String desc) {
-        // TODO Implementation
+        /* Two places for adding groups
+        1. /groups/
+        2. user_groups/current_user_id/groups
+         */
+
+        Group newGroup = new Group(name, desc, user.getUid());
+
+        DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
+        String newGroupKey = groupsRef.push().getKey();
+
+        // Paths
+        String groupsPath = DBConstants.groupsPath + "/" + newGroupKey;
+        String userGroupsPath = DBConstants.userGroupsPath + "/" + user.getUid() + "/" + DBConstants.userGroupsKey + "/" + newGroupKey;
+
+        // To push in all places atomically
+        Map<String, Object> allInserts = new HashMap<>();
+        allInserts.put(groupsPath, newGroup);
+        allInserts.put(userGroupsPath, true);
+
+        database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                Log.i(TAG, "onComplete: " + ((databaseError == null) ? "No errors" : databaseError.getDetails()));
+            }
+        });
     }
 
 }
