@@ -33,7 +33,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:textSize="18sp"
-            android:text="Due Date:"/>
+            android:text="@string/due_date"/>
 
         <com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker
             android:id="@+id/sdtp_due_date"
