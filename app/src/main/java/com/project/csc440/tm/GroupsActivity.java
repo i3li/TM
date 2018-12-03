@@ -181,6 +181,18 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
 
         navView = findViewById(R.id.nav_view_groups);
         View headerView = navView.getHeaderView(0);
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_sign_out:
+                        signOut();
+                        break;
+                        // TODO: Implement Edit Profile
+                }
+                return true;
+            }
+        });
         userDisplayNameTextView = headerView.findViewById(R.id.tv_user_display_name);
         userEmailTextView = headerView.findViewById(R.id.tv_user_email);
     }
