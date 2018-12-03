@@ -8,4 +8,5 @@
     <string name="no_tasks">There are no tasks.\nCreate the first task by tapping the + button down below.</string>
     <string name="groups_title">Groups</string>
     <string name="edit_user_profile">Edit Profile</string>
+    <string name="title_activity_create_task">create_task</string>
 </resources>
