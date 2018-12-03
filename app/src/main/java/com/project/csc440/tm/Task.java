@@ -7,12 +7,12 @@ import java.util.Date;
 public class Task {
 
     private String name;
-    private Long dueDate; // It is the timestamp since midnight 1/1/1970 in UTC
+    private Long dueDate; // It is the number of milliseconds since the epoch 'January 1, 1970, 00:00:00 GMT'
     private String details;
 
     public Task() {}
 
-    public Task(String name, String details, Long dueDate) {
+    Task(String name, String details, Long dueDate) {
         this.name = name;
         this.details = details;
         this.dueDate = dueDate;
