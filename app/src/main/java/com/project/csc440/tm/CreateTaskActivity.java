@@ -3,17 +3,27 @@ package com.project.csc440.tm;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CreateTaskActivity extends TMActivity {
+
+    private static final String TAG = "CreateTaskActivity";
 
     private static final int MAX_LENGTH_TASK_NAME = 50;
 
@@ -24,6 +34,11 @@ public class CreateTaskActivity extends TMActivity {
     private EditText nameEditText, detailsEditText;
     private SingleDateAndTimePicker dateAndTimePicker;
 
+    /**
+     * Thi timer is for updating the min time of the due date picker
+     */
+    private Timer timer;
+
     @Override
     int getLayoutResource() {
         return R.layout.activity_create_task;
@@ -33,6 +48,7 @@ public class CreateTaskActivity extends TMActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupViews();
+        setupTimer();
     }
 
     @Override
@@ -52,16 +68,39 @@ public class CreateTaskActivity extends TMActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupViews() {
+    private void updateMinDateForDueDatePicker() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, 1);
+        Date afterMinute = cal.getTime();
+        dateAndTimePicker.setMinDate(afterMinute);
+    }
+
+    private void setupDueDatePicker() {
         dateAndTimePicker = findViewById(R.id.sdtp_due_date);
-        Date now = new Date();
-        dateAndTimePicker.setDefaultDate(now);
-        dateAndTimePicker.setMinDate(now);
+        updateMinDateForDueDatePicker();
+        dateAndTimePicker.setDefaultDate(dateAndTimePicker.getMinDate());
         dateAndTimePicker.setTextColor(R.color.colorPrimaryDark);
         dateAndTimePicker.setStepMinutes(1);
+    }
 
+    private void setupViews() {
+        setupDueDatePicker();
         nameEditText = findViewById(R.id.et_task_name);
         detailsEditText = findViewById(R.id.et_task_details);
+    }
+
+    private void setupTimer() {
+        timer = new Timer();
+        final Calendar cal = Calendar.getInstance();
+        int remainingMillisUntilNextSec = 1000 - cal.get(Calendar.MILLISECOND);
+        int remainingSecsUntilNextMin = 60 - cal.get(Calendar.SECOND) + 1;
+        int remainingMillisUntilNextMin = remainingMillisUntilNextSec + remainingSecsUntilNextMin * 1000;
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateMinDateForDueDatePicker();
+            }
+        }, remainingMillisUntilNextMin, 1000*60);
     }
 
     private boolean validateFields() {
