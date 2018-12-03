@@ -186,7 +186,7 @@ public class TasksActivity extends TMActivity {
         2. group_tasks/current_group_id/tasks
          */
 
-        Task newTask = new Task(name, details, dueDate);
+        Task newTask = new Task(name, details, dueDate, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         DatabaseReference tasksRef = database.getReference().child(DBConstants.tasksPath);
         String newTaskKey = tasksRef.push().getKey();
