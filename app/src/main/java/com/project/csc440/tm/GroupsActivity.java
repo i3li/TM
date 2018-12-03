@@ -47,7 +47,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
      * TAG's constants are used for debugging purposes.
      * We use them as the first parameters in Log.x methods to indicate the class name.
      */
-    private static final String TAG = GroupsActivity.class.getName();
+    private static final String TAG = "GroupsActivity";
     /**
      * This constant is the request code that is used to start the sign in activity.
      * It can be any integer.
@@ -83,7 +83,6 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_groups);
         setupViews();
         if (auth.getCurrentUser() == null) // User is not signed in
             setupViewsForSignIn(null);
@@ -91,6 +90,11 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
             user = auth.getCurrentUser();
             setupViewsForGroups();
         }
+    }
+
+    @Override
+    int getLayoutResource() {
+        return R.layout.activity_groups;
     }
 
     @Override
@@ -145,21 +149,13 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         startActivity(intent);
     }
 
-    @Override
-    protected void setupToolbar(int id) {
-        super.setupToolbar(id);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-    }
 
     /**
      * A helper method that initializes all UI properties.
      */
     private void setupViews() {
         // Toolbar setup
-        setupToolbar(R.id.tb_groups);
-
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         drawerLayout = findViewById(R.id.dl_groups);
         signinLinearLayout = findViewById(R.id.ll_sign_in);
         signinErrorTextView = findViewById(R.id.tv_sign_in_error);

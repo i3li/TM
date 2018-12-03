@@ -14,8 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include android:id="@+id/tb_groups"
-            layout="@layout/toolbar_main" />
+        <include layout="@layout/toolbar_main" />
 
         <FrameLayout
             android:layout_height="match_parent"

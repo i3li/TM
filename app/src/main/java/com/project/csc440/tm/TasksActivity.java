@@ -29,7 +29,7 @@ public class TasksActivity extends TMActivity {
      * TAG's constants are used for debugging purposes.
      * We use them as the first parameters in Log.x methods to indicate the class name.
      */
-    private static final String TAG = TasksActivity.class.getName();
+    private static final String TAG = "TasksActivity";
 
     /**
      * These constant is used to pass data from the prev activity. It is used by the caller activity to pass the group key and group name.
@@ -59,7 +59,6 @@ public class TasksActivity extends TMActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tasks);
         setupViews();
         Intent intent = getIntent();
         if (intent.hasExtra(GROUP_KEY_KEY)) {
@@ -69,6 +68,11 @@ public class TasksActivity extends TMActivity {
             setupViewsForTasks();
         } else
             Log.e(TAG, "The group key must be passed in.");
+    }
+
+    @Override
+    int getLayoutResource() {
+        return R.layout.activity_tasks;
     }
 
     @Override
@@ -85,27 +89,10 @@ public class TasksActivity extends TMActivity {
             adapter.stopListening();
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    protected void setupToolbar(int id) {
-        super.setupToolbar(id);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-    }
-
     /**
      * A helper method that initializes all UI properties.
      */
     private void setupViews() {
-        // Toolbar setup
-        setupToolbar(R.id.tb_tasks);
-
         noTasksTextView = findViewById(R.id.tv_no_tasks);
         tasksRecyclerView = findViewById(R.id.rv_tasks);
         tasksProgressBar = findViewById(R.id.pb_tasks);
