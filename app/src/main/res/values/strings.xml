@@ -10,4 +10,6 @@
     <string name="edit_user_profile">Edit Profile</string>
     <string name="title_activity_create_task">create_task</string>
     <string name="grou_name_hint">Enter the group name</string>
+    <string name="create_group_title">Create Group</string>
+    <string name="create_task_title">Create Task</string>
 </resources>
