@@ -1,8 +1,10 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -307,9 +310,29 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                Log.i(TAG, "onComplete: " + ((databaseError == null) ? "No errors" : databaseError.getDetails()));
+                if (databaseError != null)
+                    // There is an error
+                    handleDatabaseError(databaseError);
+                else
+                    handleSuccessfullOperation(getString(R.string.success_group_creation_message));
             }
         });
+    }
+
+    private void handleSuccessfullOperation(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void handleDatabaseError(DatabaseError error) {
+        int code = error.getCode();
+        @StringRes int userErrorMessageId = R.string.general_error;
+        switch (code) {
+            case DatabaseError.DISCONNECTED:
+            case DatabaseError.NETWORK_ERROR:
+                userErrorMessageId = R.string.connection_error;
+        }
+        String userErrorMessage = getString(userErrorMessageId);
+        Toast.makeText(this, userErrorMessage, Toast.LENGTH_LONG).show();
     }
 
 }

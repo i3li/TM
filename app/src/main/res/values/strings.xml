@@ -16,4 +16,5 @@
     <string name="create">Create</string>
     <string name="empty_filed_error">Please fill this field</string>
     <string name="max_char_limit_error">The maximum character limit is</string>
+    <string name="success_group_creation_message">The group is successfully created</string>
 </resources>
