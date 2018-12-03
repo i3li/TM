@@ -9,12 +9,14 @@
     <string name="groups_title">Groups</string>
     <string name="edit_user_profile">Edit Profile</string>
     <string name="title_activity_create_task">create_task</string>
-    <string name="grou_name_hint">Enter the group name</string>
-    <string name="grou_desc_hint">Enter the group description</string>
+    <string name="group_name_hint">Enter the group name</string>
+    <string name="group_desc_hint">Enter the group description</string>
     <string name="create_group_title">Create Group</string>
     <string name="create_task_title">Create Task</string>
     <string name="create">Create</string>
     <string name="empty_filed_error">Please fill this field</string>
     <string name="max_char_limit_error">The maximum character limit is</string>
     <string name="success_group_creation_message">The group is successfully created</string>
+    <string name="task_name_hint">Enter the task name</string>
+    <string name="task_details_hint">Enter the task details</string>
 </resources>
