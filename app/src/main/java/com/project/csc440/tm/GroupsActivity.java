@@ -165,7 +165,6 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO This need to be changed to add group not sign out!
                 signIn();
             }
         });
@@ -175,7 +174,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         addGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signOut();
+                addGroup();
             }
         });
 
@@ -278,6 +277,13 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
     private void loadDrawer() {
         userDisplayNameTextView.setText(user.getDisplayName());
         userEmailTextView.setText(user.getEmail());
+    }
+
+    /**
+     * A helper method for handling 'add group' event.
+     */
+    private void addGroup() {
+        // TODO: Implementation
     }
 
 }

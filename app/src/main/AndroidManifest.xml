@@ -19,8 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TasksActivity" />
-        <activity android:name=".create_task" />
-        <activity android:name=".create_group" />
+        <activity android:name=".CreateTaskActivity" />
+        <activity android:name=".CreateGroupActivity" />
         <activity android:name=".edit_task" />
         <activity android:name=".edit_group"></activity>
     </application>
