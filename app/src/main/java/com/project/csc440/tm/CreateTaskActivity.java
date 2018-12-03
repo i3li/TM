@@ -58,6 +58,7 @@ public class CreateTaskActivity extends TMActivity {
         dateAndTimePicker.setDefaultDate(now);
         dateAndTimePicker.setMinDate(now);
         dateAndTimePicker.setTextColor(R.color.colorPrimaryDark);
+        dateAndTimePicker.setStepMinutes(1);
 
         nameEditText = findViewById(R.id.et_task_name);
         detailsEditText = findViewById(R.id.et_task_details);
