@@ -22,4 +22,5 @@
     <string name="past_due_date_error">The due date of a task must be in the future</string>
     <string name="success_task_creation_message">The task is successfully created</string>
     <string name="due_date">Due Date:</string>
+    <string name="more">More</string>
 </resources>
