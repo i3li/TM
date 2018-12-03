@@ -94,7 +94,7 @@ public class TasksActivity extends TMActivity {
             if (resultCode == RESULT_OK)
                 createTask(data.getStringExtra(CreateTaskActivity.TASK_NAME_KEY),
                         data.getStringExtra(CreateTaskActivity.TASK_DETAILS_KEY),
-                        (Date) data.getSerializableExtra(CreateTaskActivity.TASK_DUE_DATE_KEY));
+                        data.getLongExtra(CreateTaskActivity.TASK_DUE_DATE_KEY, -1));
         }
     }
 
@@ -180,7 +180,7 @@ public class TasksActivity extends TMActivity {
         startActivityForResult(intent, RC_CREATE_TASK);
     }
 
-    private void createTask(String name, String details, Date dueDate) {
+    private void createTask(String name, String details, long dueDate) {
         /* Two places for adding tasks
         1. /tasks/
         2. group_tasks/current_group_id/tasks
