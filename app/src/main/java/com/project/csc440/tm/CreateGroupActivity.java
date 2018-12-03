@@ -1,5 +1,6 @@
 package com.project.csc440.tm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
@@ -11,6 +12,9 @@ public class CreateGroupActivity extends TMActivity {
 
     private static final int MAX_LENGTH_GROUP_NAME = 50;
     private static final int MAX_LENGTH_GROUP_DESC = 250;
+
+    public static final String GROUP_NAME_KEY = "_group_name_";
+    public static final String GROUP_DESC_KEY = "_group_desc_";
 
     private EditText nameEditText;
     private EditText descEditText;
@@ -61,8 +65,9 @@ public class CreateGroupActivity extends TMActivity {
             flag = false;
         }
         if (desc.trim().length() == 0) {
-            descEditText.setError(getString(R.string.empty_filed_error));
-            flag = false;
+            // Optional
+//            descEditText.setError(getString(R.string.empty_filed_error));
+//            flag = false;
         } else if (desc.trim().length() > MAX_LENGTH_GROUP_DESC) {
             descEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_GROUP_DESC);
             flag = false;
@@ -71,8 +76,13 @@ public class CreateGroupActivity extends TMActivity {
     }
 
     private void onCreateGroupClick() {
-        if (validateTextFields())
+        if (validateTextFields()) {
+            Intent intent = new Intent();
+            intent.putExtra(GROUP_NAME_KEY, nameEditText.getText().toString().trim());
+            intent.putExtra(GROUP_DESC_KEY, descEditText.getText().toString().trim());
+            setResult(RESULT_OK, intent);
             finish();
+        }
     }
 
 }

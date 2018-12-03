@@ -1,35 +1,25 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,10 +28,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupItemClickListener {
 
@@ -59,6 +45,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
      *  2. In the 'onActivityResult' method to check whether we are returning from the sing in activity or from another activity
      */
     private static final int RC_SIGN_IN = 1;
+    private static final int RC_CREATE_GROUP = 2;
 
 
     // Views
@@ -118,6 +105,9 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
                         messageId = R.string.general_error;
                 setupViewsForSignIn(getString(messageId));
             }
+        } else if (requestCode == RC_CREATE_GROUP) {
+            if (resultCode == RESULT_OK)
+                createGroup(data.getStringExtra(CreateGroupActivity.GROUP_NAME_KEY),data.getStringExtra(CreateGroupActivity.GROUP_DESC_KEY));
         }
     }
 
@@ -176,7 +166,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         addGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addGroup();
+                startCreateGroupActivity();
             }
         });
 
@@ -284,9 +274,13 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     /**
      * A helper method for handling 'add group' event.
      */
-    private void addGroup() {
+    private void startCreateGroupActivity() {
         Intent intent = new Intent(this, CreateGroupActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, RC_CREATE_GROUP);
+    }
+
+    private void createGroup(String name, String desc) {
+        // TODO Implementation
     }
 
 }
