@@ -1,13 +1,31 @@
 package com.project.csc440.tm;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class CreateGroupActivity extends AppCompatActivity {
+public class CreateGroupActivity extends TMActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_group);
+    int getLayoutResource() {
+        return R.layout.activity_create_group;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.create_group, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_create_group:
+                // TODO: Implementation
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

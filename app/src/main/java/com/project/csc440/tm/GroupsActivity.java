@@ -1,6 +1,7 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +73,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     private RecyclerView groupsRecyclerView;
     private ProgressBar groupsProgressBar;
     private FloatingActionButton addGroupButton;
+
     private NavigationView navView;
     private TextView userDisplayNameTextView;
     private TextView userEmailTextView;
@@ -281,7 +285,8 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
      * A helper method for handling 'add group' event.
      */
     private void addGroup() {
-        // TODO: Implementation
+        Intent intent = new Intent(this, CreateGroupActivity.class);
+        startActivity(intent);
     }
 
 }
