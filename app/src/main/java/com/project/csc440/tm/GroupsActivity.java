@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.GroupItemClickListener {
+public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupItemClickListener {
 
     // Constants
     /**
@@ -59,7 +59,6 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
 
 
     // Views
-    private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     /* ----- Before signing in ----- */
     private LinearLayout signinLinearLayout;
@@ -146,19 +145,22 @@ public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.G
         startActivity(intent);
     }
 
+    @Override
+    protected void setupToolbar(int id) {
+        super.setupToolbar(id);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+    }
+
     /**
      * A helper method that initializes all UI properties.
      */
     private void setupViews() {
         // Toolbar setup
-        toolbar = findViewById(R.id.tb_groups);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        setupToolbar(R.id.tb_groups);
 
         drawerLayout = findViewById(R.id.dl_groups);
-
         signinLinearLayout = findViewById(R.id.ll_sign_in);
         signinErrorTextView = findViewById(R.id.tv_sign_in_error);
         signinButton = findViewById(R.id.btn_sign_in);

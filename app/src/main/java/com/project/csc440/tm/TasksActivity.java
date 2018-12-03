@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-public class TasksActivity extends AppCompatActivity {
+public class TasksActivity extends TMActivity {
 
     // Constants
     /**
@@ -38,7 +38,6 @@ public class TasksActivity extends AppCompatActivity {
     public static final String GROUP_NAME_KEY = "_group_name_";
 
     // Views
-    private Toolbar toolbar;
     /* ------- Empty list of tasks ------- */
     private TextView noTasksTextView;
     /* -----                         ----- */
@@ -92,16 +91,20 @@ public class TasksActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void setupToolbar(int id) {
+        super.setupToolbar(id);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+    }
+
     /**
      * A helper method that initializes all UI properties.
      */
     private void setupViews() {
         // Toolbar setup
-        toolbar = findViewById(R.id.tb_tasks);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
+        setupToolbar(R.id.tb_tasks);
 
         noTasksTextView = findViewById(R.id.tv_no_tasks);
         tasksRecyclerView = findViewById(R.id.rv_tasks);
