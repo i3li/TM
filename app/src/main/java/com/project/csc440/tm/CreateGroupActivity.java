@@ -61,10 +61,10 @@ public class CreateGroupActivity extends TMActivity {
             flag = false;
         }
         if (desc.trim().length() == 0) {
-            descEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_GROUP_DESC);
+            descEditText.setError(getString(R.string.empty_filed_error));
             flag = false;
         } else if (desc.trim().length() > MAX_LENGTH_GROUP_DESC) {
-            descEditText.setError(getString(R.string.empty_filed_error));
+            descEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_GROUP_DESC);
             flag = false;
         }
         return flag;
