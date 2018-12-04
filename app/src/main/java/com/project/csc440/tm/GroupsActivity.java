@@ -120,19 +120,10 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.groups, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.menu_group_details:
-                // TODO: open group details
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -345,7 +336,10 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     }
 
     private void updateCurrentUserProfile() {
-        // TODO: Implementation
+        String usersPath = DBConstants.usersPath + "/" + user.getUid();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(usersPath, new UserProfile(user.getDisplayName(), user.getEmail()));
+        database.getReference().updateChildren(updates);
     }
 
 }
