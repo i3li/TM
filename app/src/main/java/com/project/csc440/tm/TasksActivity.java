@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -69,6 +70,7 @@ public class TasksActivity extends TMActivity {
      * The key for the current group.
      */
     private String groupKey;
+    private String groupName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +78,10 @@ public class TasksActivity extends TMActivity {
         setupViews();
         Intent intent = getIntent();
         if (intent.hasExtra(GROUP_KEY_KEY)) {
-            if (intent.hasExtra(GROUP_NAME_KEY))
+            if (intent.hasExtra(GROUP_NAME_KEY)) {
                 setTitle(intent.getStringExtra(GROUP_NAME_KEY));
+                groupName = intent.getStringExtra(GROUP_NAME_KEY);
+            }
             groupKey = intent.getStringExtra(GROUP_KEY_KEY);
             setupViewsForTasks();
         } else
@@ -125,6 +129,10 @@ public class TasksActivity extends TMActivity {
         switch (item.getItemId()) {
             case R.id.menu_group_details:
                 // TODO: open group details
+                Intent intent = new Intent(this, ViewGroupActivity.class);
+                intent.putExtra(ViewGroupActivity.GROUP_KEY_KEY, groupKey);
+                intent.putExtra(ViewGroupActivity.GROUP_NAME_KEY, groupName);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
