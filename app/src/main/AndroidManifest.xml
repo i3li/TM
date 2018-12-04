@@ -19,10 +19,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".TasksActivity" />
-        <activity android:name=".CreateTaskActivity" android:label="@string/create_task_title" />
-        <activity android:name=".CreateGroupActivity" android:label="@string/create_group_title" />
+        <activity
+            android:name=".CreateTaskActivity"
+            android:label="@string/create_task_title" />
+        <activity
+            android:name=".CreateGroupActivity"
+            android:label="@string/create_group_title" />
         <activity android:name=".EditTaskActivity" />
-        <activity android:name=".EditGroupActivity"></activity>
+        <activity android:name=".EditGroupActivity" />
+        <activity android:name=".ViewGroupActivity"></activity>
     </application>
 
 </manifest>
