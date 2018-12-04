@@ -69,12 +69,10 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
         return new MemberHolder(view);
     }
 
-
     @Override
     protected void onBindViewHolder(@NonNull MemberHolder holder, int position, @NonNull UserProfile model) {
-        // TODO: Implementation
-//        holder.setName(model.getName());
-//        holder.setEmail(model.getEmail());
-//        holder.setAdminIndicator(.equals(adminKey));
+        holder.setName(model.getName());
+        holder.setEmail(model.getEmail());
+        holder.setAdminIndicator(getRef(position).getKey().equals(adminKey));
     }
 }

@@ -288,9 +288,10 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     }
 
     private void createGroup(String name, String desc) {
-        /* Two places for adding groups
-        1. /groups/
+        /* Three places for adding groups
+        1. groups/
         2. user_groups/current_user_id/groups
+        3. group_users/new_group_id/users/current_user
          */
 
         Group newGroup = new Group(name, desc, user.getUid());
@@ -301,11 +302,13 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         // Paths
         String groupsPath = DBConstants.groupsPath + "/" + newGroupKey;
         String userGroupsPath = DBConstants.userGroupsPath + "/" + user.getUid() + "/" + DBConstants.userGroupsGroupsKey + "/" + newGroupKey;
+        String groupUsersPath = DBConstants.groupUsersPath + "/" + newGroupKey + "/" + DBConstants.groupUsersUsersKey + "/" + user.getUid();
 
         // To push in all places atomically
         Map<String, Object> allInserts = new HashMap<>();
         allInserts.put(groupsPath, newGroup);
         allInserts.put(userGroupsPath, true);
+        allInserts.put(groupUsersPath, true);
 
         database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
             @Override

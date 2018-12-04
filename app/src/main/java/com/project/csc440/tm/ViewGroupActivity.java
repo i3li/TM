@@ -104,9 +104,9 @@ public class ViewGroupActivity extends TMActivity {
 
             }
         });
-        // Query for groups the user is a member in
+        // Query for group members
         // TODO: Implementation
-//        Query groupMembersQuery = database.getReference().child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey);
+        Query groupMembersQuery = database.getReference().child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey);
 //        DatabaseReference groupsRef = FirebaseAuth.getInstance().get
 //        FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
 //        adapter = new GroupsAdapter(options, this);
