@@ -102,6 +102,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == RESULT_OK) {
                 user = auth.getCurrentUser();
+                updateCurrentUserProfile(); // After user is signed up, their profile should be added to the database
                 setupViewsForGroups();
             } else {
                 int messageId = R.string.sign_in_message;
@@ -341,6 +342,10 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         }
         String userErrorMessage = getString(userErrorMessageId);
         Toast.makeText(this, userErrorMessage, Toast.LENGTH_LONG).show();
+    }
+
+    private void updateCurrentUserProfile() {
+        // TODO: Implementation
     }
 
 }
