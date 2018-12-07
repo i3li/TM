@@ -17,11 +17,17 @@ import java.util.Date;
 
 class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder> {
 
+    interface TaskItemClickListener {
+        void onTaskItemClick(String taskKey, String taskName);
+    }
+
+    private final TasksAdapter.TaskItemClickListener taskItemClickListener;
+
     private static final String TAG = "TasksAdapter";
 
     private static final int CLOSE_DUE_DATE_IN_DAYS = 3;
 
-    class TaskHolder extends RecyclerView.ViewHolder {
+    class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private  String formatDate(Date date) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, d MMMM yyy hh:mm a");
@@ -37,6 +43,13 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
             firstLetterTextView = itemView.findViewById(R.id.tv_task_first_letter);
             nameTextView = itemView.findViewById(R.id.tv_task_name);
             dueDateTextView = itemView.findViewById(R.id.tv_task_due_date);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int clickedPos = getAdapterPosition();
+            TextView clickedTaskNameTextView = v.findViewById(R.id.tv_task_name);
+            taskItemClickListener.onTaskItemClick(getRef(clickedPos).getKey(), clickedTaskNameTextView.getText().toString());
         }
 
         void setTask(Task task) {
@@ -61,8 +74,9 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
 
     }
 
-    TasksAdapter(@NonNull FirebaseRecyclerOptions<Task> options) {
+    TasksAdapter(@NonNull FirebaseRecyclerOptions<Task> options, TaskItemClickListener taskItemClickListener) {
         super(options);
+        this.taskItemClickListener = taskItemClickListener;
     }
 
     @NonNull
