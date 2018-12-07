@@ -242,16 +242,4 @@ public class TasksActivity extends TMActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void handleDatabaseError(DatabaseError error) {
-        int code = error.getCode();
-        @StringRes int userErrorMessageId = R.string.general_error;
-        switch (code) {
-            case DatabaseError.DISCONNECTED:
-            case DatabaseError.NETWORK_ERROR:
-                userErrorMessageId = R.string.connection_error;
-        }
-        String userErrorMessage = getString(userErrorMessageId);
-        Toast.makeText(this, userErrorMessage, Toast.LENGTH_LONG).show();
-    }
-
 }

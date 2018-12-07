@@ -1,6 +1,7 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -145,7 +146,7 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.i(TAG, "onCancelled: ");
             }
         });
     }
@@ -167,52 +168,66 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
          */
 
         // First check if member exists
-        DatabaseReference usersRef = database.getReference().child(DBConstants.usersPath);
+        final DatabaseReference usersRef = database.getReference().child(DBConstants.usersPath);
         usersRef.orderByChild(DBConstants.usersEmailKey).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                UserProfile member = dataSnapshot.getValue(UserProfile.class);
-                if (member == null)
-                    Toast.makeText(ViewGroupActivity.this, getString(R.string.no_user_with_email) + " " + email, Toast.LENGTH_LONG).show();
-                else {
-                    // TODO: Add member to the group
 
+                if (dataSnapshot.getChildrenCount() == 1) {
+                    // Member exists
+                    DataSnapshot memberDataSnapshot = dataSnapshot.getChildren().iterator().next();
+                    final String memberKey = memberDataSnapshot.getKey();
+                    final UserProfile member = memberDataSnapshot.getValue(UserProfile.class);
+                    // Check if the user is not adding themselves
+                    if (user.getUid().equals(memberKey))
+                        Toast.makeText(ViewGroupActivity.this, getString(R.string.user_add_themselves), Toast.LENGTH_LONG).show();
+                    else {
+                        // Check if the user is already a member on the group
+                        database.getReference().child(DBConstants.userGroupsPath).child(memberKey).child(DBConstants.userGroupsGroupsKey).orderByKey().equalTo(groupKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() != null) {
+                                    // User is already a member on the group
+                                    Toast.makeText(ViewGroupActivity.this, member.getEmail() + " " + getString(R.string.member_already_on_the_group), Toast.LENGTH_LONG).show();
+                                } else {
+                                    // Add member to the group
+                                    String groupUsersPath = DBConstants.groupUsersPath+ "/" + groupKey + "/" + DBConstants.groupUsersUsersKey + "/" + memberKey;
+                                    String userGroupsPath = DBConstants.userGroupsPath + "/" + memberKey + "/" + DBConstants.userGroupsGroupsKey + "/" + groupKey;
+
+                                    Map<String, Object> allUpdates = new HashMap<>();
+                                    allUpdates.put(groupUsersPath, true);
+                                    allUpdates.put(userGroupsPath, true);
+
+                                    database.getReference().updateChildren(allUpdates, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                            if (databaseError != null)
+                                                handleDatabaseError(databaseError);
+                                            else
+                                                Toast.makeText(ViewGroupActivity.this, member.getName() + " " + getString(R.string.success_member_addition_message), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.i(TAG, "onCancelled: ");
+                            }
+                        });
+                    }
+                } else {
+                    // Member does not exist
+                    Toast.makeText(ViewGroupActivity.this, getString(R.string.no_user_with_email) + " " + email, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.i(TAG, "onCancelled: ");
             }
         });
-
-
-//        Group newGroup = new Group(name, desc, user.getUid());
-//
-//        DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
-//        String newGroupKey = groupsRef.push().getKey();
-//
-//        // Paths
-//        String groupsPath = DBConstants.groupsPath + "/" + newGroupKey;
-//        String userGroupsPath = DBConstants.userGroupsPath + "/" + user.getUid() + "/" + DBConstants.userGroupsGroupsKey + "/" + newGroupKey;
-//        String groupUsersPath = DBConstants.groupUsersPath + "/" + newGroupKey + "/" + DBConstants.groupUsersUsersKey + "/" + user.getUid();
-//
-//        // To push in all places atomically
-//        Map<String, Object> allInserts = new HashMap<>();
-//        allInserts.put(groupsPath, newGroup);
-//        allInserts.put(userGroupsPath, true);
-//        allInserts.put(groupUsersPath, true);
-//
-//        database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
-//            @Override
-//            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-//                if (databaseError != null)
-//                    // There is an error
-//                    handleDatabaseError(databaseError);
-//                else
-//                    handleSuccessfullOperation(getString(R.string.success_group_creation_message));
-//            }
-//        });
+        
     }
 
 }

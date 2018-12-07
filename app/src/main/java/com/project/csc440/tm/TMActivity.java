@@ -7,10 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseError;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -131,6 +135,18 @@ public abstract class TMActivity extends AppCompatActivity {
         setTitle(R.string.no_connection_tilte);
         if (disconnectionThreeDotTimer == null)
             setupDisconnectionThreeDotTimer();
+    }
+
+    protected void handleDatabaseError(DatabaseError error) {
+        int code = error.getCode();
+        @StringRes int userErrorMessageId = R.string.general_error;
+        switch (code) {
+            case DatabaseError.DISCONNECTED:
+            case DatabaseError.NETWORK_ERROR:
+                userErrorMessageId = R.string.connection_error;
+        }
+        String userErrorMessage = getString(userErrorMessageId);
+        Toast.makeText(this, userErrorMessage, Toast.LENGTH_LONG).show();
     }
 
 }
