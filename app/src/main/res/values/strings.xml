@@ -35,4 +35,6 @@
     <string name="user_add_themselves">This is your email. Please enter the email for the user you want to add as a member</string>
     <string name="member_already_on_the_group">is already a member of the group</string>
     <string name="success_member_addition_message">is added to the group</string>
+    <string name="assign_to">Assigned To:</string>
+    <string name="details">Details:</string>
 </resources>
