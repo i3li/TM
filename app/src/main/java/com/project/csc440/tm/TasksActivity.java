@@ -38,7 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TasksActivity extends TMFBActivity {
+public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItemClickListener {
 
     // Constants
     /**
@@ -205,9 +205,8 @@ public class TasksActivity extends TMFBActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildrenCount() == 0)
                     TasksActivity.this.setupViewsForEmptyList();
-
                 FirebaseRecyclerOptions<Task> options = new FirebaseRecyclerOptions.Builder<Task>().setIndexedQuery(groupTasksQuery, tasksRef, Task.class).build();
-                adapter = new TasksAdapter(options);
+                adapter = new TasksAdapter(options, TasksActivity.this);
                 adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                     @Override
                     public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -272,4 +271,11 @@ public class TasksActivity extends TMFBActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void onTaskItemClick(String taskKey, String taskName) {
+        Intent intent = new Intent(this, ViewTaskActivity.class);
+        intent.putExtra(ViewTaskActivity.TASK_KEY_KEY, taskKey);
+        intent.putExtra(ViewTaskActivity.TASK_NAME_KEY, taskName);
+        startActivity(intent);
+    }
 }
