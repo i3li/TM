@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +42,7 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
     public static final String GROUP_KEY_KEY = "_group_key_";
     public static final String GROUP_NAME_KEY = "_group_name_";
 
+    private LinearLayout descLinearLayout;
     private TextView descTextView;
     private FloatingActionButton addMemberButton;
     private RecyclerView membersRecyclerView;
@@ -94,6 +98,7 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
     }
 
     private void setupViews() {
+        descLinearLayout = findViewById(R.id.ll_group_view_desc);
         descTextView = findViewById(R.id.tv_group_view_desc);
         addMemberButton = findViewById(R.id.fab_add_member);
         addMemberButton.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +114,12 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
     private void updateFieldsWithGroup(Group group) {
         this.group = group;
         setTitle(group.getName());
-        descTextView.setText(group.getDescription());
+        if (group.getDescription() == null || group.getDescription().isEmpty())
+            descLinearLayout.setVisibility(View.GONE);
+        else {
+            descLinearLayout.setVisibility(View.VISIBLE);
+            descTextView.setText(group.getDescription());
+        }
         if (group.getAdmin().equals(user.getUid()))
             addMemberButton.show();
         else
