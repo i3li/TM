@@ -97,8 +97,24 @@ public class ViewTaskActivity extends TMFBActivity {
             dueDateTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        // TODO: assigned to
+        if (task.getAssignee() == null)
+            assignedToLinearLayout.setVisibility(View.GONE);
+        else {
+            assignedToLinearLayout.setVisibility(View.VISIBLE);
+            databaseRef.child(DBConstants.usersPath).child(task.getAssignee()).child(DBConstants.usersNameKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null) {
+                        assignedToTextView.setText(dataSnapshot.getValue(String.class));
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    handleDatabaseError(databaseError);
+                }
+            });
+        }
 
     }
 
