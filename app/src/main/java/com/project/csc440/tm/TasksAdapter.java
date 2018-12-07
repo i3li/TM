@@ -18,7 +18,7 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
     class TaskHolder extends RecyclerView.ViewHolder {
 
         private  String formatDate(Date date) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, d MMMM yyy hh:mm");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, d MMMM yyy hh:mm a");
             return  simpleDateFormat.format(date);
         }
 
