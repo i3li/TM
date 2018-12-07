@@ -2,6 +2,8 @@ package com.project.csc440.tm;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder> {
+
+    private static final String TAG = "TasksAdapter";
 
     private static final int CLOSE_DUE_DATE_IN_DAYS = 3;
 
@@ -35,12 +39,17 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
             dueDateTextView = itemView.findViewById(R.id.tv_task_due_date);
         }
 
-        void setName(String name) {
-            firstLetterTextView.setText(name.substring(0, 1));
-            nameTextView.setText(name);
+        void setTask(Task task) {
+            firstLetterTextView.setText(task.getName().substring(0, 1));
+            if (task.isAccomplished()) {
+                nameTextView.setText(Html.fromHtml("<s>" + task.getName() + "</s>"));
+            } else
+                nameTextView.setText(task.getName());
+            setDueDate(task.getDueDate());
         }
 
-        void setDueDate(Date date) {
+        private void setDueDate(long lDate) {
+            Date date = new Date(lDate);
             dueDateTextView.setText(formatDate(date));
             Date now = new Date();
             if (date.before(now))
@@ -66,8 +75,7 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
 
     @Override
     protected void onBindViewHolder(@NonNull TaskHolder holder, int position, @NonNull Task model) {
-        holder.setName(model.getName());
-        holder.setDueDate(new Date(model.getDueDate()));
+        holder.setTask(model);
     }
 }
 

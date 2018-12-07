@@ -7,6 +7,8 @@ public class Task {
     private String details;
     private String owner;
 
+    private boolean isAccomplished;
+
     public Task() {}
 
     Task(String name, String details, Long dueDate, String owner) {
@@ -46,6 +48,14 @@ public class Task {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public boolean isAccomplished() {
+        return isAccomplished;
+    }
+
+    public void setAccomplished(boolean accomplished) {
+        isAccomplished = accomplished;
     }
 
 }
