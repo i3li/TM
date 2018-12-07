@@ -6,6 +6,7 @@
     <string name="general_error">An error occurred, please try again.</string>
     <string name="connection_error">Please check your internet connection and try again.</string>
     <string name="no_tasks">There are no tasks.\nCreate the first task by tapping the + button down below.</string>
+    <string name="no_groups">There are no groups.\nCreate the first group by tapping the + button down below.</string>
     <string name="groups_title">Groups</string>
     <string name="edit_user_profile">Edit Profile</string>
     <string name="title_activity_create_task">create_task</string>

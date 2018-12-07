@@ -70,6 +70,18 @@
 
             </android.support.v7.widget.RecyclerView>
 
+            <TextView
+                android:id="@+id/tv_no_groups"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_groups"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textColor="@color/colorAccent"
+                android:padding="16dp"
+                android:visibility="gone" />
+
         </FrameLayout>
 
     </LinearLayout>

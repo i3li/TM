@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,10 +29,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +74,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
     private NavigationView navView;
     private TextView userDisplayNameTextView;
     private TextView userEmailTextView;
+    private TextView noGroupsTextView;
     /* -----                  ----- */
 
     private GroupsAdapter adapter;
@@ -178,7 +182,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
                 startCreateGroupActivity();
             }
         });
-
+        noGroupsTextView = findViewById(R.id.tv_no_groups);
         navView = findViewById(R.id.nav_view_groups);
         View headerView = navView.getHeaderView(0);
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -211,6 +215,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
         groupsRecyclerView.setVisibility(View.GONE);
         groupsProgressBar.setVisibility(View.GONE);
         addGroupButton.hide();
+        noGroupsTextView.setVisibility(View.GONE);
         signinLinearLayout.setVisibility(View.VISIBLE);
         String text = errorMessage == null ? getString(R.string.sign_in_message) : errorMessage;
         signinErrorTextView.setText(text);
@@ -225,7 +230,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         loadDrawer();
         signinLinearLayout.setVisibility(View.GONE);
-        groupsRecyclerView.setVisibility(View.VISIBLE);
+//        groupsRecyclerView.setVisibility(View.VISIBLE);
         groupsProgressBar.setVisibility(View.VISIBLE);
         addGroupButton.show();
         loadGroups();
@@ -255,22 +260,44 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
      */
     private void loadGroups() {
         String currentUserId = getCurrentUser().getUid();
-        DatabaseReference groupsRef = databaseRef.child(DBConstants.groupsPath);
+        final DatabaseReference groupsRef = databaseRef.child(DBConstants.groupsPath);
+
         // Query for groups the user is a member in
-        Query userGroupsQuery = databaseRef.child(DBConstants.userGroupsPath).child(currentUserId).child(DBConstants.userGroupsGroupsKey);
-        FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
-        adapter = new GroupsAdapter(options, this);
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        final Query userGroupsQuery = databaseRef.child(DBConstants.userGroupsPath).child(currentUserId).child(DBConstants.userGroupsGroupsKey);
+
+        // Check if there is at least one group
+        userGroupsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                groupsProgressBar.setVisibility(View.GONE);
-                adapter.unregisterAdapterDataObserver(this);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    groupsProgressBar.setVisibility(View.GONE);
+                    noGroupsTextView.setVisibility(View.VISIBLE);
+                }
+
+                FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
+                adapter = new GroupsAdapter(options, GroupsActivity.this);
+                adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                    @Override
+                    public void onItemRangeInserted(int positionStart, int itemCount) {
+                        super.onItemRangeInserted(positionStart, itemCount);
+                        groupsRecyclerView.setVisibility(View.VISIBLE);
+                        noGroupsTextView.setVisibility(View.GONE);
+                        groupsProgressBar.setVisibility(View.GONE);
+                        adapter.unregisterAdapterDataObserver(this);
+                    }
+                });
+                groupsRecyclerView.setAdapter(adapter);
+                groupsRecyclerView.setLayoutManager(new LinearLayoutManager(GroupsActivity.this));
+                adapter.startListening();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-        groupsRecyclerView.setAdapter(adapter);
-        groupsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter.startListening();
+
     }
 
     /**
