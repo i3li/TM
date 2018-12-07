@@ -41,12 +41,14 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
             firstLetterTextView = itemView.findViewById(R.id.tv_task_first_letter);
             nameTextView = itemView.findViewById(R.id.tv_task_name);
             dueDateTextView = itemView.findViewById(R.id.tv_task_due_date);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int clickedPos = getAdapterPosition();
             TextView clickedTaskNameTextView = v.findViewById(R.id.tv_task_name);
+            Log.i(TAG, "onClick: ");
             taskItemClickListener.onTaskItemClick(getRef(clickedPos).getKey(), clickedTaskNameTextView.getText().toString());
         }
 
