@@ -287,9 +287,8 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
         userGroupsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() == 0) {
+                if (dataSnapshot.getChildrenCount() == 0)
                     GroupsActivity.this.setupViewsForEmptyList();
-                }
 
                 FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
                 adapter = new GroupsAdapter(options, GroupsActivity.this);

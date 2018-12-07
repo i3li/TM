@@ -27,10 +27,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -165,8 +167,16 @@ public class TasksActivity extends TMFBActivity {
     private void setupViewsForEmptyList() {
         tasksRecyclerView.setVisibility(View.GONE);
         tasksProgressBar.setVisibility(View.GONE);
-        addTaskButton.hide();
         noTasksTextView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * A helper method that hides the no tasks text view, and displays the list of tasks.
+     */
+    private void setupViewsForNonEmptyList() {
+        tasksRecyclerView.setVisibility(View.VISIBLE);
+        noTasksTextView.setVisibility(View.GONE);
+        tasksProgressBar.setVisibility(View.GONE);
     }
 
     /**
@@ -185,22 +195,37 @@ public class TasksActivity extends TMFBActivity {
      * A helper method for loading tasks into the recycler view.
      */
     private void loadTasks() {
+        final DatabaseReference tasksRef = databaseRef.child(DBConstants.tasksPath);
+
         // Query for tasks that in the group
-        Query TasksQuery = databaseRef.child(DBConstants.groupTasksPath).child(groupKey).child(DBConstants.groupTasksTasksKey);
-        DatabaseReference tasksRef = databaseRef.child(DBConstants.tasksPath);
-        FirebaseRecyclerOptions<Task> options = new FirebaseRecyclerOptions.Builder<Task>().setIndexedQuery(TasksQuery, tasksRef, Task.class).build();
-        adapter = new TasksAdapter(options);
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        final Query groupTasksQuery = databaseRef.child(DBConstants.groupTasksPath).child(groupKey).child(DBConstants.groupTasksTasksKey);
+
+        groupTasksQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                tasksProgressBar.setVisibility(View.GONE);
-                adapter.unregisterAdapterDataObserver(this);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0)
+                    TasksActivity.this.setupViewsForEmptyList();
+
+                FirebaseRecyclerOptions<Task> options = new FirebaseRecyclerOptions.Builder<Task>().setIndexedQuery(groupTasksQuery, tasksRef, Task.class).build();
+                adapter = new TasksAdapter(options);
+                adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                    @Override
+                    public void onItemRangeInserted(int positionStart, int itemCount) {
+                        super.onItemRangeInserted(positionStart, itemCount);
+                        TasksActivity.this.setupViewsForNonEmptyList();
+                        adapter.unregisterAdapterDataObserver(this);
+                    }
+                });
+                tasksRecyclerView.setAdapter(adapter);
+                tasksRecyclerView.setLayoutManager(new LinearLayoutManager(TasksActivity.this));
+                adapter.startListening();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-        tasksRecyclerView.setAdapter(adapter);
-        tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter.startListening();
     }
 
     /**
