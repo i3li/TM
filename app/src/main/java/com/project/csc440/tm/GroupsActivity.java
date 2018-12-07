@@ -237,7 +237,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
     }
 
     /**
-     * A helper method that displays the no groups text view, and hides the list of groups.
+     * A helper method that displays the no tasks text view, and hides the list of tasks.
      */
     private void setupViewsForEmptyList() {
 //        tasksRecyclerView.setVisibility(View.GONE);
@@ -246,7 +246,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
     }
 
     /**
-     * A helper method that hides the no groups text view, and displays the list of groups.
+     * A helper method that hides the no tasks text view, and displays the list of tasks.
      */
     private void setupViewsForNonEmptyList() {
         groupsRecyclerView.setVisibility(View.VISIBLE);
@@ -332,9 +332,9 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
     }
 
     private void createGroup(String name, String desc) {
-        /* Three places for adding groups
-        1. groups/
-        2. user_groups/current_user_id/groups
+        /* Three places for adding tasks
+        1. tasks/
+        2. user_groups/current_user_id/tasks
         3. group_users/new_group_id/users/current_user
          */
 
