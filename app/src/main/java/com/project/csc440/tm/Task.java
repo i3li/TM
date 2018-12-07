@@ -2,11 +2,13 @@ package com.project.csc440.tm;
 
 public class Task {
 
+    public static final int CLOSE_DUE_DATE_IN_DAYS = 3;
+
     private String name;
     private Long dueDate; // It is the number of milliseconds since the epoch 'January 1, 1970, 00:00:00 GMT'
     private String details;
     private String owner;
-
+    private String assignee;
     private boolean isAccomplished;
 
     public Task() {}
@@ -52,6 +54,14 @@ public class Task {
 
     public boolean isAccomplished() {
         return isAccomplished;
+    }
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
     }
 
     public void setAccomplished(boolean accomplished) {
