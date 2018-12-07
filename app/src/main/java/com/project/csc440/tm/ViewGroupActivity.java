@@ -91,6 +91,13 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (adapter != null)
+            adapter.stopListening();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_ADD_MEMBER)
