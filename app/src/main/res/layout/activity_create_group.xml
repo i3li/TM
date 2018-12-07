@@ -19,14 +19,14 @@
             android:id="@+id/et_group_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:inputType="textCapWords"
             android:hint="@string/group_name_hint" />
 
         <EditText
             android:id="@+id/et_group_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:inputType="textCapSentences"
             android:hint="@string/group_desc_hint" />
 
     </LinearLayout>
