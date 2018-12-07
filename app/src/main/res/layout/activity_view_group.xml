@@ -10,19 +10,19 @@
     <include layout="@layout/toolbar_main" />
 
 
-        <ScrollView
-            android:id="@+id/sv_group_desc"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:padding="16dp"
-            android:layout_weight="1">
+    <ScrollView
+        android:id="@+id/sv_group_desc"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/tv_group_view_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_group_view_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-        </ScrollView>
+    </ScrollView>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -51,12 +51,18 @@
                 android:textSize="18sp"
                 android:text="@string/members" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_members"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_members"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pb_members"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
     </FrameLayout>
 

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
     private TextView descTextView;
     private FloatingActionButton addMemberButton;
     private RecyclerView membersRecyclerView;
+    private ProgressBar progressBar;
 
     private MembersAdapter adapter;
 
@@ -107,6 +109,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
             }
         });
         membersRecyclerView = findViewById(R.id.rv_members);
+        progressBar = findViewById(R.id.pb_members);
         loadGroupInfo();
     }
 
@@ -131,14 +134,14 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         if (adapter != null)
             adapter.stopListening();
         adapter = new MembersAdapter(options, this, group.getAdmin());
-//        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeInserted(int positionStart, int itemCount) {
-//                super.onItemRangeInserted(positionStart, itemCount);
-//                memberProgressBar.setVisibility(View.GONE);
-//                adapter.unregisterAdapterDataObserver(this);
-//            }
-//        });
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                progressBar.setVisibility(View.GONE);
+                adapter.unregisterAdapterDataObserver(this);
+            }
+        });
         membersRecyclerView.setAdapter(adapter);
         membersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();
