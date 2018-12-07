@@ -19,12 +19,14 @@
             android:id="@+id/et_task_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:hint="@string/task_name_hint" />
 
         <EditText
             android:id="@+id/et_task_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:hint="@string/task_details_hint" />
 
         <TextView
