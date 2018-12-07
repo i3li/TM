@@ -223,7 +223,7 @@ public class TasksActivity extends TMFBActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                handleDatabaseError(databaseError);
             }
         });
     }

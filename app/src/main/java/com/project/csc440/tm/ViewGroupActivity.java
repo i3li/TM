@@ -165,7 +165,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i(TAG, "onCancelled: ");
+                handleDatabaseError(databaseError);
             }
         });
     }
@@ -231,7 +231,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Log.i(TAG, "onCancelled: ");
+                                handleDatabaseError(databaseError);
                             }
                         });
                     }
@@ -243,7 +243,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i(TAG, "onCancelled: ");
+                handleDatabaseError(databaseError);
             }
         });
         

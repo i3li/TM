@@ -308,7 +308,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                handleDatabaseError(databaseError);
             }
         });
 
