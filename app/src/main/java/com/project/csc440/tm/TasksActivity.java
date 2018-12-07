@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TasksActivity extends TMActivity {
+public class TasksActivity extends TMFBActivity {
 
     // Constants
     /**
@@ -63,7 +63,6 @@ public class TasksActivity extends TMActivity {
     private FloatingActionButton addTaskButton;
     /* -----                         ----- */
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private TasksAdapter adapter;
 
     /**
@@ -128,7 +127,6 @@ public class TasksActivity extends TMActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_group_details:
-                // TODO: open group details
                 Intent intent = new Intent(this, ViewGroupActivity.class);
                 intent.putExtra(ViewGroupActivity.GROUP_KEY_KEY, groupKey);
                 intent.putExtra(ViewGroupActivity.GROUP_NAME_KEY, groupName);
@@ -181,8 +179,8 @@ public class TasksActivity extends TMActivity {
      */
     private void loadTasks() {
         // Query for tasks that in the group
-        Query TasksQuery = database.getReference().child(DBConstants.groupTasksPath).child(groupKey).child(DBConstants.groupTasksTasksKey);
-        DatabaseReference tasksRef = database.getReference().child(DBConstants.tasksPath);
+        Query TasksQuery = databaseRef.child(DBConstants.groupTasksPath).child(groupKey).child(DBConstants.groupTasksTasksKey);
+        DatabaseReference tasksRef = databaseRef.child(DBConstants.tasksPath);
         FirebaseRecyclerOptions<Task> options = new FirebaseRecyclerOptions.Builder<Task>().setIndexedQuery(TasksQuery, tasksRef, Task.class).build();
         adapter = new TasksAdapter(options);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -214,7 +212,7 @@ public class TasksActivity extends TMActivity {
 
         Task newTask = new Task(name, details, dueDate, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        DatabaseReference tasksRef = database.getReference().child(DBConstants.tasksPath);
+        DatabaseReference tasksRef = databaseRef.child(DBConstants.tasksPath);
         String newTaskKey = tasksRef.push().getKey();
 
         // Paths
@@ -226,7 +224,7 @@ public class TasksActivity extends TMActivity {
         allInserts.put(tasksPath, newTask);
         allInserts.put(groupTasksPath, true);
 
-        database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
+        databaseRef.updateChildren(allInserts, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null)

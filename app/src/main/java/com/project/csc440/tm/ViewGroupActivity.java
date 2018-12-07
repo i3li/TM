@@ -33,7 +33,7 @@ import org.w3c.dom.Text;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ViewGroupActivity extends TMActivity implements MembersAdapter.MemberItemClickListener {
+public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.MemberItemClickListener {
 
     private static final String TAG = "ViewGroupActivity";
 
@@ -49,8 +49,6 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
 
     private MembersAdapter adapter;
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private DatabaseReference groupRef;
 
     private String groupKey;
@@ -69,7 +67,7 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
         Intent intent = getIntent();
         groupKey = intent.getStringExtra(GROUP_KEY_KEY);
         setTitle(intent.getStringExtra(GROUP_NAME_KEY));
-        groupRef = database.getReference().child(DBConstants.groupsPath).child(groupKey);
+        groupRef = databaseRef.child(DBConstants.groupsPath).child(groupKey);
         setupViews();
     }
 
@@ -120,14 +118,14 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
             descLinearLayout.setVisibility(View.VISIBLE);
             descTextView.setText(group.getDescription());
         }
-        if (group.getAdmin().equals(user.getUid()))
+        if (group.getAdmin().equals(getCurrentUser().getUid()))
             addMemberButton.show();
         else
             addMemberButton.hide();
 
         // Query for group members
-        Query groupMembersQuery = database.getReference().child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey);
-        DatabaseReference usersRef = database.getReference().child(DBConstants.usersPath);
+        Query groupMembersQuery = databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey);
+        DatabaseReference usersRef = databaseRef.child(DBConstants.usersPath);
         FirebaseRecyclerOptions<UserProfile> options = new FirebaseRecyclerOptions.Builder<UserProfile>().setIndexedQuery(groupMembersQuery, usersRef, UserProfile.class).build();
         if (adapter != null)
             adapter.stopListening();
@@ -178,7 +176,7 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
          */
 
         // First check if member exists
-        final DatabaseReference usersRef = database.getReference().child(DBConstants.usersPath);
+        final DatabaseReference usersRef = databaseRef.child(DBConstants.usersPath);
         usersRef.orderByChild(DBConstants.usersEmailKey).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -189,11 +187,11 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
                     final String memberKey = memberDataSnapshot.getKey();
                     final UserProfile member = memberDataSnapshot.getValue(UserProfile.class);
                     // Check if the user is not adding themselves
-                    if (user.getUid().equals(memberKey))
+                    if (getCurrentUser().getUid().equals(memberKey))
                         Toast.makeText(ViewGroupActivity.this, getString(R.string.user_add_themselves), Toast.LENGTH_LONG).show();
                     else {
                         // Check if the user is already a member on the group
-                        database.getReference().child(DBConstants.userGroupsPath).child(memberKey).child(DBConstants.userGroupsGroupsKey).orderByKey().equalTo(groupKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                        databaseRef.child(DBConstants.userGroupsPath).child(memberKey).child(DBConstants.userGroupsGroupsKey).orderByKey().equalTo(groupKey).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.getValue() != null) {
@@ -208,7 +206,7 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
                                     allUpdates.put(groupUsersPath, true);
                                     allUpdates.put(userGroupsPath, true);
 
-                                    database.getReference().updateChildren(allUpdates, new DatabaseReference.CompletionListener() {
+                                    databaseRef.updateChildren(allUpdates, new DatabaseReference.CompletionListener() {
                                         @Override
                                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                                             if (databaseError != null)

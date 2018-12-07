@@ -36,7 +36,7 @@ import com.google.firebase.database.Query;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupItemClickListener {
+public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupItemClickListener {
 
     // Constants
     /**
@@ -73,21 +73,16 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     private TextView userEmailTextView;
     /* -----                  ----- */
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseUser user = auth.getCurrentUser();
     private GroupsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupViews();
-        if (auth.getCurrentUser() == null) // User is not signed in
+        if (getCurrentUser() == null) // User is not signed in
             setupViewsForSignIn(null);
-        else { // User is signed in
-            user = auth.getCurrentUser();
+        else // User is signed in
             setupViewsForGroups();
-        }
     }
 
     @Override
@@ -101,7 +96,6 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == RESULT_OK) {
-                user = auth.getCurrentUser();
                 updateCurrentUserProfile(); // After user is signed up, their profile should be added to the database
                 setupViewsForGroups();
             } else {
@@ -253,9 +247,10 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
      * A helper method for loading groups into the recycler view.
      */
     private void loadGroups() {
+        String currentUserId = getCurrentUser().getUid();
+        DatabaseReference groupsRef = databaseRef.child(DBConstants.groupsPath);
         // Query for groups the user is a member in
-        Query userGroupsQuery = database.getReference().child(DBConstants.userGroupsPath).child(user.getUid()).child(DBConstants.userGroupsGroupsKey);
-        DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
+        Query userGroupsQuery = databaseRef.child(DBConstants.userGroupsPath).child(currentUserId).child(DBConstants.userGroupsGroupsKey);
         FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
         adapter = new GroupsAdapter(options, this);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -275,6 +270,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
      * A helper method for loading user info into the drawer.
      */
     private void loadDrawer() {
+        FirebaseUser user = getCurrentUser();
         userDisplayNameTextView.setText(user.getDisplayName());
         userEmailTextView.setText(user.getEmail());
     }
@@ -294,9 +290,11 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         3. group_users/new_group_id/users/current_user
          */
 
+        FirebaseUser user = getCurrentUser();
+
         Group newGroup = new Group(name, desc, user.getUid());
 
-        DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
+        DatabaseReference groupsRef = databaseRef.child(DBConstants.groupsPath);
         String newGroupKey = groupsRef.push().getKey();
 
         // Paths
@@ -310,7 +308,7 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
         allInserts.put(userGroupsPath, true);
         allInserts.put(groupUsersPath, true);
 
-        database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
+        databaseRef.updateChildren(allInserts, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError != null)
@@ -327,10 +325,11 @@ public class GroupsActivity extends TMActivity implements GroupsAdapter.GroupIte
     }
 
     private void updateCurrentUserProfile() {
+        FirebaseUser user = getCurrentUser();
         String usersPath = DBConstants.usersPath + "/" + user.getUid();
         Map<String, Object> updates = new HashMap<>();
         updates.put(usersPath, new UserProfile(user.getDisplayName(), user.getEmail()));
-        database.getReference().updateChildren(updates);
+        databaseRef.updateChildren(updates);
     }
 
 }
