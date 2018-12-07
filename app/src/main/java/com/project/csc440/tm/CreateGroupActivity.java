@@ -42,7 +42,7 @@ public class CreateGroupActivity extends TMActivity {
         switch (item.getItemId()) {
             case R.id.menu_create_group:
                 onCreateGroupClick();
-                break;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

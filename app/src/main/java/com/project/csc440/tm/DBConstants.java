@@ -15,4 +15,6 @@ final class DBConstants {
     static final String groupUsersPath = "group_users";
     static final String groupUsersUsersKey = "users";
     static final String usersPath = "users";
+    static final String usersEmailKey = "email";
+
 }

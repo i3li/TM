@@ -2,6 +2,7 @@ package com.project.csc440.tm;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.data.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -24,9 +26,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ViewGroupActivity extends TMActivity implements MembersAdapter.MemberItemClickListener {
 
     private static final String TAG = "ViewGroupActivity";
+
+    private static final int RC_ADD_MEMBER = 1;
 
     public static final String GROUP_KEY_KEY = "_group_key_";
     public static final String GROUP_NAME_KEY = "_group_name_";
@@ -77,13 +84,21 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_ADD_MEMBER)
+            if (resultCode == RESULT_OK)
+                addMember(data.getStringExtra(AddMemberActivity.MEMBER_EMAIL_KEY));
+    }
+
     private void setupViews() {
         descTextView = findViewById(R.id.tv_group_view_desc);
         addMemberButton = findViewById(R.id.fab_add_member);
         addMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Implementation
+                startAddMemberActivity();
             }
         });
         membersRecyclerView = findViewById(R.id.rv_members);
@@ -100,7 +115,6 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
             addMemberButton.hide();
 
         // Query for group members
-        // TODO: Implementation
         Query groupMembersQuery = database.getReference().child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey);
         DatabaseReference usersRef = database.getReference().child(DBConstants.usersPath);
         FirebaseRecyclerOptions<UserProfile> options = new FirebaseRecyclerOptions.Builder<UserProfile>().setIndexedQuery(groupMembersQuery, usersRef, UserProfile.class).build();
@@ -140,4 +154,65 @@ public class ViewGroupActivity extends TMActivity implements MembersAdapter.Memb
     public void onMemberItemClick(String userId) {
 
     }
+
+    private void startAddMemberActivity() {
+        Intent intent = new Intent(this, AddMemberActivity.class);
+        startActivityForResult(intent, RC_ADD_MEMBER);
+    }
+
+    private void addMember(final String email) {
+        /* Two places for adding members
+        1. group_users/group_key/users
+        2. user_groups/new_member_key/groups
+         */
+
+        // First check if member exists
+        DatabaseReference usersRef = database.getReference().child(DBConstants.usersPath);
+        usersRef.orderByChild(DBConstants.usersEmailKey).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserProfile member = dataSnapshot.getValue(UserProfile.class);
+                if (member == null)
+                    Toast.makeText(ViewGroupActivity.this, getString(R.string.no_user_with_email) + " " + email, Toast.LENGTH_LONG).show();
+                else {
+                    // TODO: Add member to the group
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+//        Group newGroup = new Group(name, desc, user.getUid());
+//
+//        DatabaseReference groupsRef = database.getReference().child(DBConstants.groupsPath);
+//        String newGroupKey = groupsRef.push().getKey();
+//
+//        // Paths
+//        String groupsPath = DBConstants.groupsPath + "/" + newGroupKey;
+//        String userGroupsPath = DBConstants.userGroupsPath + "/" + user.getUid() + "/" + DBConstants.userGroupsGroupsKey + "/" + newGroupKey;
+//        String groupUsersPath = DBConstants.groupUsersPath + "/" + newGroupKey + "/" + DBConstants.groupUsersUsersKey + "/" + user.getUid();
+//
+//        // To push in all places atomically
+//        Map<String, Object> allInserts = new HashMap<>();
+//        allInserts.put(groupsPath, newGroup);
+//        allInserts.put(userGroupsPath, true);
+//        allInserts.put(groupUsersPath, true);
+//
+//        database.getReference().updateChildren(allInserts, new DatabaseReference.CompletionListener() {
+//            @Override
+//            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+//                if (databaseError != null)
+//                    // There is an error
+//                    handleDatabaseError(databaseError);
+//                else
+//                    handleSuccessfullOperation(getString(R.string.success_group_creation_message));
+//            }
+//        });
+    }
+
 }

@@ -26,4 +26,9 @@
     <string name="desc">Description</string>
     <string name="members">Members</string>
     <string name="no_connection_tilte">Waiting for network</string>
+    <string name="title_activity_add_member">Add Member</string>
+    <string name="member_email_hint">Enter the member email</string>
+    <string name="add">Add</string>
+    <string name="invalid_email">Invalid email address</string>
+    <string name="no_user_with_email">There is no user with the email: </string>
 </resources>
