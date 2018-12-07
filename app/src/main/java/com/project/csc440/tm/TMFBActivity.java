@@ -24,7 +24,7 @@ public abstract class TMFBActivity extends TMActivity {
 
     private String origTitle;
     private String waitingDots = "";
-    private boolean isConnected = false;
+    private boolean isConnected = true; // The default is true just for changing the title
     private ConnectivityManager connectivityManager;
 
     protected DatabaseReference databaseRef;
@@ -44,10 +44,16 @@ public abstract class TMFBActivity extends TMActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        boolean _connected = isConnected();
+        if (_connected != isConnected) {
+            isConnected = _connected;
+            if (isConnected)
+                onConnection();
+            else
+                onDisconnection();
+        } else if (!isConnected)
+            setupDisconnectionThreeDotTimer();
         setupConnectionCheckerTimer();
-        isConnected = isConnected();
-        if (!isConnected)
-            onDisconnection();
     }
 
     @Override
