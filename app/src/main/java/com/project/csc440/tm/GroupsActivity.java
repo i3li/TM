@@ -237,6 +237,24 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
     }
 
     /**
+     * A helper method that displays the no groups text view, and hides the list of groups.
+     */
+    private void setupViewsForEmptyList() {
+//        tasksRecyclerView.setVisibility(View.GONE);
+        groupsProgressBar.setVisibility(View.GONE);
+        noGroupsTextView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * A helper method that hides the no groups text view, and displays the list of groups.
+     */
+    private void setupViewsForNonEmptyList() {
+        groupsRecyclerView.setVisibility(View.VISIBLE);
+        noGroupsTextView.setVisibility(View.GONE);
+        groupsProgressBar.setVisibility(View.GONE);
+    }
+
+    /**
      * A helper method that displays the sign in wizard.
      */
     private void signIn() {
@@ -270,8 +288,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildrenCount() == 0) {
-                    groupsProgressBar.setVisibility(View.GONE);
-                    noGroupsTextView.setVisibility(View.VISIBLE);
+                    GroupsActivity.this.setupViewsForEmptyList();
                 }
 
                 FirebaseRecyclerOptions<Group> options = new FirebaseRecyclerOptions.Builder<Group>().setIndexedQuery(userGroupsQuery, groupsRef, Group.class).build();
@@ -280,9 +297,7 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
                     @Override
                     public void onItemRangeInserted(int positionStart, int itemCount) {
                         super.onItemRangeInserted(positionStart, itemCount);
-                        groupsRecyclerView.setVisibility(View.VISIBLE);
-                        noGroupsTextView.setVisibility(View.GONE);
-                        groupsProgressBar.setVisibility(View.GONE);
+                        GroupsActivity.this.setupViewsForNonEmptyList();
                         adapter.unregisterAdapterDataObserver(this);
                     }
                 });
