@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
     public static final String GROUP_KEY_KEY = "_group_key_";
     public static final String GROUP_NAME_KEY = "_group_name_";
 
-    private LinearLayout descLinearLayout;
+    private ScrollView descScrollView;
     private TextView descTextView;
     private FloatingActionButton addMemberButton;
     private RecyclerView membersRecyclerView;
@@ -96,7 +97,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
     }
 
     private void setupViews() {
-        descLinearLayout = findViewById(R.id.ll_group_view_desc);
+        descScrollView = findViewById(R.id.sv_group_desc);
         descTextView = findViewById(R.id.tv_group_view_desc);
         addMemberButton = findViewById(R.id.fab_add_member);
         addMemberButton.setOnClickListener(new View.OnClickListener() {
@@ -113,9 +114,9 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         this.group = group;
         setTitle(group.getName());
         if (group.getDescription() == null || group.getDescription().isEmpty())
-            descLinearLayout.setVisibility(View.GONE);
+            descScrollView.setVisibility(View.GONE);
         else {
-            descLinearLayout.setVisibility(View.VISIBLE);
+            descScrollView.setVisibility(View.VISIBLE);
             descTextView.setText(group.getDescription());
         }
         if (group.getAdmin().equals(getCurrentUser().getUid()))

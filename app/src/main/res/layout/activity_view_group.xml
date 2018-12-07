@@ -9,29 +9,25 @@
 
     <include layout="@layout/toolbar_main" />
 
-    <LinearLayout
-        android:id="@+id/ll_group_view_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
 
-        <TextView
+        <ScrollView
+            android:id="@+id/sv_group_desc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:hint="@string/desc" />
+            android:layout_height="0dp"
+            android:padding="16dp"
+            android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tv_group_view_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_group_view_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    </LinearLayout>
+        </ScrollView>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="3">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_add_member"
@@ -44,14 +40,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="@string/members" />
+                android:textAlignment="center"
+                android:padding="8dp"
+                android:textSize="18sp"
+                android:text="@string/members" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_members"

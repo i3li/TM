@@ -11,7 +11,7 @@ import android.widget.EditText;
 public class CreateGroupActivity extends TMActivity {
 
     private static final int MAX_LENGTH_GROUP_NAME = 50;
-    private static final int MAX_LENGTH_GROUP_DESC = 250;
+    private static final int MAX_LENGTH_GROUP_DESC = 500;
 
     public static final String GROUP_NAME_KEY = "_group_name_";
     public static final String GROUP_DESC_KEY = "_group_desc_";
