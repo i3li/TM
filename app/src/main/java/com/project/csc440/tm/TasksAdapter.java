@@ -15,6 +15,8 @@ import java.util.Date;
 
 class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder> {
 
+    private static final int CLOSE_DUE_DATE_IN_DAYS = 3;
+
     class TaskHolder extends RecyclerView.ViewHolder {
 
         private  String formatDate(Date date) {
@@ -40,6 +42,12 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
 
         void setDueDate(Date date) {
             dueDateTextView.setText(formatDate(date));
+            Date now = new Date();
+            if (date.before(now))
+                dueDateTextView.setTextColor(itemView.getResources().getColor(R.color.colorAccent));
+            else if ((date.getTime() - now.getTime()) <= CLOSE_DUE_DATE_IN_DAYS*24*60*60*1000) {
+                dueDateTextView.setTextColor(itemView.getResources().getColor(R.color.colorPrimary));
+            }
         }
 
     }
