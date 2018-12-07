@@ -101,7 +101,7 @@ public class TasksActivity extends TMFBActivity {
             if (resultCode == RESULT_OK)
                 createTask(data.getStringExtra(CreateTaskActivity.TASK_NAME_KEY),
                         data.getStringExtra(CreateTaskActivity.TASK_DETAILS_KEY),
-                        data.getLongExtra(CreateTaskActivity.TASK_DUE_DATE_KEY, -1));
+                        (Date) data.getSerializableExtra(CreateTaskActivity.TASK_DUE_DATE_KEY));
         }
     }
 
@@ -236,13 +236,13 @@ public class TasksActivity extends TMFBActivity {
         startActivityForResult(intent, RC_CREATE_TASK);
     }
 
-    private void createTask(String name, String details, long dueDate) {
+    private void createTask(String name, String details, Date dueDate) {
         /* Two places for adding tasks
         1. /tasks/
         2. group_tasks/current_group_id/tasks
          */
 
-        Task newTask = new Task(name, details, dueDate, FirebaseAuth.getInstance().getCurrentUser().getUid());
+        Task newTask = new Task(name, details, dueDate.getTime(), FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         DatabaseReference tasksRef = databaseRef.child(DBConstants.tasksPath);
         String newTaskKey = tasksRef.push().getKey();

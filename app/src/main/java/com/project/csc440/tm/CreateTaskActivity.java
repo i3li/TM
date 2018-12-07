@@ -124,7 +124,7 @@ public class CreateTaskActivity extends TMActivity {
 
     private void onCreateTaskClick() {
         if (validateFields()) {
-            long dueDate = dateAndTimePicker.getDate().getTime();
+            Date dueDate = dateAndTimePicker.getDate();
             Intent intent = new Intent();
             intent.putExtra(TASK_NAME_KEY, nameEditText.getText().toString().trim());
             intent.putExtra(TASK_DETAILS_KEY, detailsEditText.getText().toString().trim());

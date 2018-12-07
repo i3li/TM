@@ -1,9 +1,5 @@
 package com.project.csc440.tm;
 
-//import java.util.Date;
-
-import java.util.Date;
-
 public class Task {
 
     private String name;
