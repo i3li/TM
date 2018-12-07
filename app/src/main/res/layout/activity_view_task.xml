@@ -60,6 +60,7 @@
 
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/ll_task_view_details"
             android:layout_width="match_parent"

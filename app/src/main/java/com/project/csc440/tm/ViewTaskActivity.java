@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -63,6 +65,23 @@ public class ViewTaskActivity extends TMFBActivity {
             taskRef.removeEventListener(taskListener);
             taskListener = null;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_task, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_accomplish:
+                return true;
+            case R.id.menu_assign:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupViews() {
