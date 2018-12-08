@@ -288,9 +288,10 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
         if there is only one member (the current admin) delete the whole group
         5. groups/group_key
         6. group_tasks/group_key
-        7. delete all of the tasks in the group
+        7. delete all of the tasks assigned to the member in the group
 
         For lack of time, only 1,2,3,4 is implemented
+
          */
 
         String groupUsersPath = DBConstants.groupUsersPath+ "/" + groupKey + "/" + DBConstants.groupUsersUsersKey + "/" + userId;
