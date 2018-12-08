@@ -112,7 +112,7 @@ public class CreateTaskActivity extends TMActivity {
             nameEditText.setError(getString(R.string.empty_filed_error));
             flag = false;
         } else if (name.trim().length() > MAX_LENGTH_TASK_NAME) {
-            nameEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_TASK_NAME);
+            nameEditText.setError(getString(R.string.max_char_limit_error, MAX_LENGTH_TASK_NAME));
             flag = false;
         }
         if (dueDate.before(new Date())) {

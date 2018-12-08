@@ -211,7 +211,7 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.getValue() != null) {
                                     // User is already a member on the group
-                                    Toast.makeText(ViewGroupActivity.this, member.getEmail() + " " + getString(R.string.member_already_on_the_group), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ViewGroupActivity.this, getString(R.string.member_already_on_the_group, member.getEmail()), Toast.LENGTH_LONG).show();
                                 } else {
                                     // Add member to the group
                                     String groupUsersPath = DBConstants.groupUsersPath+ "/" + groupKey + "/" + DBConstants.groupUsersUsersKey + "/" + memberKey;
@@ -227,7 +227,7 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
                                             if (databaseError != null)
                                                 handleDatabaseError(databaseError);
                                             else
-                                                Toast.makeText(ViewGroupActivity.this, member.getName() + " " + getString(R.string.success_member_addition_message), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ViewGroupActivity.this, getString(R.string.success_member_addition_message, member.getName()), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }
@@ -241,7 +241,7 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
                     }
                 } else {
                     // Member does not exist
-                    Toast.makeText(ViewGroupActivity.this, getString(R.string.no_user_with_email) + " " + email, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ViewGroupActivity.this, getString(R.string.no_user_with_email, email), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -258,7 +258,7 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
         VerificationDialogFragment.getInstance(getString(R.string.delete_member_verification, username), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
             @Override
             public void onYes() {
-                deleteMember(userId, username + " " + getString(R.string.success_deleting_member_message));
+                deleteMember(userId, getString(R.string.success_deleting_member_message, username));
             }
 
         }).show(getSupportFragmentManager(), VerificationDialogFragment.class.getName());

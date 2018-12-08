@@ -60,7 +60,7 @@ public class CreateGroupActivity extends TMActivity {
             nameEditText.setError(getString(R.string.empty_filed_error));
             flag = false;
         } else if (name.trim().length() > MAX_LENGTH_GROUP_NAME) {
-            nameEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_GROUP_NAME);
+            nameEditText.setError(getString(R.string.max_char_limit_error, MAX_LENGTH_GROUP_NAME));
             flag = false;
         }
         if (desc.trim().length() == 0) {
@@ -68,7 +68,7 @@ public class CreateGroupActivity extends TMActivity {
 //            descEditText.setError(getString(R.string.empty_filed_error));
 //            flag = false;
         } else if (desc.trim().length() > MAX_LENGTH_GROUP_DESC) {
-            descEditText.setError(getString(R.string.max_char_limit_error) + " " + MAX_LENGTH_GROUP_DESC);
+            descEditText.setError(getString(R.string.max_char_limit_error, MAX_LENGTH_GROUP_DESC));
             flag = false;
         }
         return flag;

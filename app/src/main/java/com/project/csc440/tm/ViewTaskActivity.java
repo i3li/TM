@@ -122,7 +122,7 @@ public class ViewTaskActivity extends InGroupActivity {
                         if (databaseError != null)
                             handleDatabaseError(databaseError);
                         else
-                            Toast.makeText(ViewTaskActivity.this, memberName + " " + getString(R.string.success_member_assignment), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ViewTaskActivity.this, getString(R.string.success_member_assignment, memberName), Toast.LENGTH_LONG).show();
                     }
                 });
             }
