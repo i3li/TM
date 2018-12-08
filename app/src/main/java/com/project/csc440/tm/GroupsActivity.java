@@ -192,7 +192,6 @@ public class GroupsActivity extends TMFBActivity implements GroupsAdapter.GroupI
                     case R.id.nav_sign_out:
                         signOut();
                         break;
-                        // TODO: Implement Edit Profile
                 }
                 return true;
             }

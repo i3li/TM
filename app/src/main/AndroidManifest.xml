@@ -34,7 +34,6 @@
             android:label="@string/title_activity_add_member" />
         <activity android:name=".ViewTaskActivity" />
         <activity android:name=".SelectMemberActivity" />
-        <activity android:name=".EditUserProfileActivity"></activity>
     </application>
 
 </manifest>
