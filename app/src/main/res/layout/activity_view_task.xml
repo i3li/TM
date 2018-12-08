@@ -12,27 +12,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:padding="16dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/btn_assign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Assign" />
+
+            <Button
+                android:id="@+id/btn_accomplish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mark as accomplished" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/due_date" />
 
             <TextView
                 android:id="@+id/tv_task_view_due_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="22/22/2018 12:12 PM" />
 
         </LinearLayout>
@@ -40,33 +59,29 @@
         <LinearLayout
             android:id="@+id/ll_task_view_assigned_to"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/assign_to" />
 
             <TextView
                 android:id="@+id/tv_task_view_assigned_to_member_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="Ali Za" />
 
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/ll_task_view_details"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
@@ -83,13 +98,11 @@
 
                 <TextView
                     android:id="@+id/tv_task_view_details"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="No details"/>
 
             </ScrollView>
         </LinearLayout>
-
     </LinearLayout>
-
 </LinearLayout>
