@@ -25,8 +25,6 @@
         <activity
             android:name=".CreateGroupActivity"
             android:label="@string/create_group_title" />
-        <activity android:name=".EditTaskActivity" />
-        <activity android:name=".EditGroupActivity" />
         <activity android:name=".ViewGroupActivity" />
         <activity
             android:name=".AddMemberActivity"

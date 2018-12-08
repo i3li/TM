@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,8 +29,9 @@ class TasksAdapter extends FirebaseRecyclerAdapter<Task, TasksAdapter.TaskHolder
     class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private  String formatDate(Date date) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, d MMMM yyy hh:mm a");
-            return  simpleDateFormat.format(date);
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, d MMMM yyy hh:mm a");
+            DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
+            return  dateFormat.format(date);
         }
 
         private TextView firstLetterTextView;
