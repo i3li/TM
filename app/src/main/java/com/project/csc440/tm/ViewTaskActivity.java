@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,7 +76,28 @@ public class ViewTaskActivity extends TMFBActivity {
         detailsTextView = findViewById(R.id.tv_task_view_details);
         detailsLinearLayout = findViewById(R.id.ll_task_view_details);
         assignButton = findViewById(R.id.btn_assign);
+        assignButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         accomplishButton = findViewById(R.id.btn_accomplish);
+        accomplishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                taskRef.child(DBConstants.taskAccomplishedKey).setValue(true, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                        if (databaseError != null)
+                            handleDatabaseError(databaseError);
+                        else {
+                            accomplishButton.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private  String formatDate(Date date) {
