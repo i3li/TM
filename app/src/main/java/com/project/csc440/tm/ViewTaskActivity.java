@@ -188,6 +188,8 @@ public class ViewTaskActivity extends InGroupActivity {
 
         if (task.getAssignee() == null || !task.getAssignee().equals(getCurrentUser().getUid()))
             accomplishButton.setVisibility(View.GONE);
+        else
+            accomplishButton.setVisibility(View.VISIBLE);
 
         if (task.getAssignee() == null) {
             assignedToTextView.setText(getString(R.string.not_assigned_yet));
