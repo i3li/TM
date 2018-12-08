@@ -18,5 +18,6 @@ final class DBConstants {
     static final String usersEmailKey = "email";
     static final String usersNameKey = "name";
     static final String taskAccomplishedKey = "accomplished";
+    static final String taskAssigneeKey = "assignee";
 
 }

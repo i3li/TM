@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.database.DataSnapshot;
@@ -82,10 +83,18 @@ public class ViewTaskActivity extends TMFBActivity {
         if (requestCode == RC_SELECT_MEMBER) {
             if (resultCode == RESULT_OK) {
                 String memberId = data.getStringExtra(SelectMemberActivity.MEMBER_KEY_KEY);
-                String memberName = data.getStringExtra(SelectMemberActivity.MEMBER_NAME_KEY);
+                final String memberName = data.getStringExtra(SelectMemberActivity.MEMBER_NAME_KEY);
                 Log.i(TAG, "onActivityResult: The selected member is: " + memberId + ":" + memberName);
                 // TODO: Add the member
-
+                taskRef.child(DBConstants.taskAssigneeKey).setValue(memberId, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                        if (databaseError != null)
+                            handleDatabaseError(databaseError);
+                        else
+                            Toast.makeText(ViewTaskActivity.this, memberName + " " + getString(R.string.success_member_assignment), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
     }
