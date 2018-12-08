@@ -263,6 +263,7 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
     @Override
     public void onTaskItemClick(String taskKey, String taskName) {
         Intent intent = new Intent(this, ViewTaskActivity.class);
+        intent.putExtra(ViewTaskActivity.GROUP_KEY_KEY, groupKey);
         intent.putExtra(ViewTaskActivity.TASK_KEY_KEY, taskKey);
         intent.putExtra(ViewTaskActivity.TASK_NAME_KEY, taskName);
         startActivity(intent);

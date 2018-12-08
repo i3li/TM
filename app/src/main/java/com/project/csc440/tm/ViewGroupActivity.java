@@ -35,7 +35,7 @@ import org.w3c.dom.Text;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.MemberItemClickListener {
+public class ViewGroupActivity extends TMFBActivity {
 
     private static final String TAG = "ViewGroupActivity";
 
@@ -140,7 +140,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         FirebaseRecyclerOptions<UserProfile> options = new FirebaseRecyclerOptions.Builder<UserProfile>().setIndexedQuery(groupMembersQuery, usersRef, UserProfile.class).build();
         if (adapter != null)
             adapter.stopListening();
-        adapter = new MembersAdapter(options, this, group.getAdmin());
+        adapter = new MembersAdapter(options, null, group.getAdmin());
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -168,11 +168,6 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
                 handleDatabaseError(databaseError);
             }
         });
-    }
-
-    @Override
-    public void onMemberItemClick(String userId) {
-
     }
 
     private void startAddMemberActivity() {

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,9 +26,13 @@ public class ViewTaskActivity extends TMFBActivity {
 
     private static final String TAG = "ViewTaskActivity";
 
+    public static final String GROUP_KEY_KEY = "_group_key_";
     public static final String TASK_KEY_KEY = "_task_key_";
     public static final String TASK_NAME_KEY = "_task_name_";
 
+    private static final int RC_SELECT_MEMBER = 1;
+
+    private String groupKey;
     private String taskKey;
     private Task task;
 
@@ -48,6 +53,7 @@ public class ViewTaskActivity extends TMFBActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        groupKey = intent.getStringExtra(GROUP_KEY_KEY);
         taskKey = intent.getStringExtra(TASK_KEY_KEY);
         setTitle(intent.getStringExtra(TASK_NAME_KEY));
         taskRef = databaseRef.child(DBConstants.tasksPath).child(taskKey);
@@ -70,6 +76,20 @@ public class ViewTaskActivity extends TMFBActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SELECT_MEMBER) {
+            if (resultCode == RESULT_OK) {
+                String memberId = data.getStringExtra(SelectMemberActivity.MEMBER_KEY_KEY);
+                String memberName = data.getStringExtra(SelectMemberActivity.MEMBER_NAME_KEY);
+                Log.i(TAG, "onActivityResult: The selected member is: " + memberId + ":" + memberName);
+                // TODO: Add the member
+
+            }
+        }
+    }
+
     private void setupViews() {
         dueDateTextView = findViewById(R.id.tv_task_view_due_date);
         assignedToTextView = findViewById(R.id.tv_task_view_assigned_to_member_name);
@@ -79,7 +99,9 @@ public class ViewTaskActivity extends TMFBActivity {
         assignButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ViewTaskActivity.this, SelectMemberActivity.class);
+                intent.putExtra(SelectMemberActivity.GROUP_KEY_KEY, groupKey);
+                startActivityForResult(intent, RC_SELECT_MEMBER);
             }
         });
         accomplishButton = findViewById(R.id.btn_accomplish);

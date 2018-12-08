@@ -14,7 +14,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter.MemberHolder> {
 
     interface MemberItemClickListener {
-        void onMemberItemClick(String userId);
+        void onMemberItemClick(String userId, String username);
     }
 
     private final MemberItemClickListener memberItemClickListener;
@@ -52,7 +52,9 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
         @Override
         public void onClick(View v) {
             int clickedPos = getAdapterPosition();
-            memberItemClickListener.onMemberItemClick(getRef(clickedPos).getKey());
+            TextView clickedMemberNameTextView = v.findViewById(R.id.tv_member_name);
+            if (memberItemClickListener != null)
+                memberItemClickListener.onMemberItemClick(getRef(clickedPos).getKey(), clickedMemberNameTextView.getText().toString());
         }
     }
 
