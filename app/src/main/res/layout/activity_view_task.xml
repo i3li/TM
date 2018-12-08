@@ -25,12 +25,21 @@
                 android:id="@+id/btn_assign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFF"
+                android:padding="8dp"
                 android:text="Assign" />
 
             <Button
                 android:id="@+id/btn_accomplish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFF"
+                android:padding="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:text="Mark as accomplished" />
 
         </LinearLayout>
@@ -57,7 +66,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_task_view_assigned_to"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

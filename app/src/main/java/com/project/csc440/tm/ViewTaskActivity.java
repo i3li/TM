@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,7 +40,8 @@ public class ViewTaskActivity extends TMFBActivity {
     }
 
     private TextView dueDateTextView, assignedToTextView, detailsTextView;
-    private LinearLayout assignedToLinearLayout, detailsLinearLayout;
+    private LinearLayout detailsLinearLayout;
+    private Button assignButton, accomplishButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,8 +73,9 @@ public class ViewTaskActivity extends TMFBActivity {
         dueDateTextView = findViewById(R.id.tv_task_view_due_date);
         assignedToTextView = findViewById(R.id.tv_task_view_assigned_to_member_name);
         detailsTextView = findViewById(R.id.tv_task_view_details);
-        assignedToLinearLayout = findViewById(R.id.ll_task_view_assigned_to);
         detailsLinearLayout = findViewById(R.id.ll_task_view_details);
+        assignButton = findViewById(R.id.btn_assign);
+        accomplishButton = findViewById(R.id.btn_accomplish);
     }
 
     private  String formatDate(Date date) {
@@ -99,10 +102,14 @@ public class ViewTaskActivity extends TMFBActivity {
             dueDateTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        if (task.getAssignee() == null)
-            assignedToLinearLayout.setVisibility(View.GONE);
-        else {
-            assignedToLinearLayout.setVisibility(View.VISIBLE);
+        if (task.getAssignee() == null || !task.getAssignee().equals(getCurrentUser().getUid()))
+            accomplishButton.setVisibility(View.GONE);
+
+        if (task.getAssignee() == null) {
+            assignedToTextView.setText(getString(R.string.not_assigned_yet));
+            if (task.getOwner().equals(getCurrentUser().getUid()))
+                assignButton.setVisibility(View.VISIBLE);
+        } else {
             databaseRef.child(DBConstants.usersPath).child(task.getAssignee()).child(DBConstants.usersNameKey).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
