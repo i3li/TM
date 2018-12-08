@@ -55,6 +55,8 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
     /* -----                         ----- */
 
     private TasksAdapter adapter;
+    private ValueEventListener membershipListener;
+    private DatabaseReference membershipRef;
 
     /**
      * The key for the current group.
@@ -73,6 +75,7 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
                 groupName = intent.getStringExtra(GROUP_NAME_KEY);
             }
             groupKey = intent.getStringExtra(GROUP_KEY_KEY);
+            membershipRef = databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey).child(getCurrentUser().getUid());
             setupViewsForTasks();
         } else
             Log.e(TAG, "The group key must be passed in.");
@@ -99,6 +102,8 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
         super.onStart();
 //        if (adapter != null)
 //            adapter.startListening();
+        if (membershipListener == null)
+            listenToMembership();
     }
 
     @Override
@@ -106,6 +111,10 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
         super.onStop();
 //        if (adapter != null)
 //            adapter.stopListening();
+        if (membershipListener != null) {
+            membershipRef.removeEventListener(membershipListener);
+            membershipListener = null;
+        }
     }
 
     @Override
@@ -132,6 +141,19 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void listenToMembership() {
+        membershipListener = membershipRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) // Current user got deleted from the group
+                    finish();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 
     /**

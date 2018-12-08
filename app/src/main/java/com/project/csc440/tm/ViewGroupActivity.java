@@ -1,11 +1,9 @@
 package com.project.csc440.tm;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,29 +11,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.data.model.User;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -62,7 +49,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
     private String groupKey;
     private Group group;
 
-    private ValueEventListener groupListener, membershipLisener;
+    private ValueEventListener groupListener, membershipListener;
 
     @Override
     int getLayoutResource() {
@@ -85,8 +72,8 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         super.onStart();
         if (groupListener == null)
             loadGroupInfo();
-        if (membershipLisener == null)
-            lisenToMembership();
+        if (membershipListener == null)
+            listenToMembership();
     }
 
     @Override
@@ -96,9 +83,9 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
             groupRef.removeEventListener(groupListener);
             groupListener = null;
         }
-        if (membershipLisener != null) {
-            membershipRef.removeEventListener(membershipLisener);
-            membershipLisener = null;
+        if (membershipListener != null) {
+            membershipRef.removeEventListener(membershipListener);
+            membershipListener = null;
         }
     }
 
@@ -119,7 +106,6 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_exit:
-                // TODO: imp
                 VerificationDialogFragment.getInstance(getString(R.string.exit_group_verification), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
                     @Override
                     public void onYes() {
@@ -190,8 +176,8 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
 
     }
 
-    private void lisenToMembership() {
-        membershipLisener = membershipRef.addValueEventListener(new ValueEventListener() {
+    private void listenToMembership() {
+        membershipListener = membershipRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) // Current user got deleted from the group
@@ -356,7 +342,7 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
                         map.put(DBConstants.groupsPath + "/" + groupKey + "/" + DBConstants.groupsAdminKey, newAdmin);
                         update(map);
                     } else { // only the admin on the group
-
+                        update(map);
                     }
                 }
 
