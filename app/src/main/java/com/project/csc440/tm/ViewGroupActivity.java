@@ -37,6 +37,7 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Member;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.MemberDeleteClickListener {
@@ -277,26 +278,102 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         Log.i(TAG, "onMemberDeleteClick: Delete Member " + userId + ":" + username);
     }
 
+    private void update(Map<String, Object> map) {
+        Log.i(TAG, "update: Map: " + map);
+        databaseRef.updateChildren(map, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null)
+                    handleDatabaseError(databaseError);
+                else
+                    Toast.makeText(ViewGroupActivity.this, R.string.success_user_exiting_message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void exitGroup() {
-        /* Two places for exiting groups
+        /* Pathes for exiting groups
         1. group_users/group_key/users/current_user_id
         2. user_groups/current_user_id/groups/group_key
+        Update admin if the current is an admin
+        3. groups/group_key/admin/new_admin_key
+        To get new_admin_key:
+        4. group_users/group_key/users/ get first two users
+        if there is only one member (the current admin) delete the whole group
+        5. groups/group_key
+        6. group_tasks/group_key
+        7. delete all of the tasks in the group
+
+        For lack of time, only 1,2,3,4 is implemented
+
          */
 
         String groupUsersPath = DBConstants.groupUsersPath+ "/" + groupKey + "/" + DBConstants.groupUsersUsersKey + "/" + getCurrentUser().getUid();
         String userGroupsPath = DBConstants.userGroupsPath + "/" + getCurrentUser().getUid() + "/" + DBConstants.userGroupsGroupsKey + "/" + groupKey;
 
-        Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new HashMap<>();
         map.put(groupUsersPath, null);
         map.put(userGroupsPath, null);
 
-        databaseRef.updateChildren(map, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                Toast.makeText(ViewGroupActivity.this, R.string.success_user_exiting_message, Toast.LENGTH_SHORT).show();
-                // TODO: Check if the deleted member is the admin
-            }
-        });
+        if (group.getAdmin().equals(getCurrentUser().getUid())) {
+            // Add pathes to update the admin
+            // First, check if there is any other member on the group
+            databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey).limitToFirst(2).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getChildrenCount() == 2) {
+                        Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                        DataSnapshot firstMemberDS = iterator.next();
+                        String newAdmin = firstMemberDS.getKey();
+                        Log.i(TAG, "onDataChange: The new admin is " + newAdmin);
+                        if (newAdmin.equals(getCurrentUser().getUid())) {
+                            // Get the second one
+                            newAdmin = iterator.next().getKey();
+                            Log.i(TAG, "onDataChange: Never mind, the new admin is " + newAdmin);
+                        }
+                        map.put(DBConstants.groupsPath + "/" + groupKey + "/" + DBConstants.groupsAdminKey, newAdmin);
+                        update(map);
+                    } else { // only the admin on the group
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    handleDatabaseError(databaseError);
+                }
+            });
+        } else {
+            update(map);
+        }
+
+//        databaseRef.updateChildren(map, new DatabaseReference.CompletionListener() {
+//            @Override
+//            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+//                Toast.makeText(ViewGroupActivity.this, R.string.success_user_exiting_message, Toast.LENGTH_SHORT).show();
+//                // Check if the deleted member is the admin
+//                if (group.getAdmin().equals(getCurrentUser().getUid())) {
+//                    // Update the group admin to another member
+//                    databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey).limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            if (dataSnapshot.exists()) {
+//                                // Update the group with the first member
+//                                groupRef.child(DBConstants.groupsAdminKey).setValue();
+//                            } else {
+//                                // No other members (Delete the group)
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//                }
+//
+//            }
+//        });
 
     }
 

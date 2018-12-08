@@ -7,6 +7,7 @@ package com.project.csc440.tm;
 final class DBConstants {
 
     static final String groupsPath = "groups";
+    static final String groupsAdminKey = "admin";
     static final String userGroupsPath = "user_groups";
     static final String userGroupsGroupsKey = "groups";
     static final String groupTasksPath = "group_tasks";
