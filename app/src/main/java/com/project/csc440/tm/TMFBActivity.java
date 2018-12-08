@@ -124,6 +124,7 @@ public abstract class TMFBActivity extends TMActivity {
     }
 
     protected void onDisconnection() {
+        origTitle = getTitle().toString();
         setTitle(R.string.no_connection_tilte);
         if (disconnectionThreeDotTimer == null)
             setupDisconnectionThreeDotTimer();
