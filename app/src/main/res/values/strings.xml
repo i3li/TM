@@ -34,6 +34,7 @@
     <string name="member_already_on_the_group">is already a member of the group</string>
     <string name="success_member_addition_message">is added to the group</string>
     <string name="success_user_exiting_message">You exited the group successfully</string>
+    <string name="success_deleting_member_message">is successfully deleted from the group</string>
     <string name="assign_to">Assigned To:</string>
     <string name="details">Details:</string>
     <string name="not_assigned_yet">Not assigned yet</string>
@@ -48,4 +49,5 @@
     <string name="no">No</string>
     <string name="delete_task_verification">Are you sure that you want to delete this task?</string>
     <string name="exit_group_verification">Are you sure that you want to exit?\n* You won\'t be a member of this group anymore.</string>
+    <string name="delete_member_verification">Are you sure that you want to delete %1$s from the group?</string>
 </resources>

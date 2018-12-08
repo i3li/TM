@@ -98,13 +98,7 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_exit:
-                VerificationDialogFragment.getInstance(getString(R.string.exit_group_verification), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
-                    @Override
-                    public void onYes() {
-                        exitGroup();
-                    }
-
-                }).show(getSupportFragmentManager(), VerificationDialogFragment.class.getName());
+                exitGroup();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -260,12 +254,17 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
     }
 
     @Override
-    public void onMemberDeleteClick(String userId, String username) {
-        // TODO: delete member
-        Log.i(TAG, "onMemberDeleteClick: Delete Member " + userId + ":" + username);
+    public void onMemberDeleteClick(final String userId, final String username) {
+        VerificationDialogFragment.getInstance(getString(R.string.delete_member_verification, username), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
+            @Override
+            public void onYes() {
+                deleteMember(userId, username + " " + getString(R.string.success_deleting_member_message));
+            }
+
+        }).show(getSupportFragmentManager(), VerificationDialogFragment.class.getName());
     }
 
-    private void update(Map<String, Object> map) {
+    private void update(Map<String, Object> map, final String message) {
         Log.i(TAG, "update: Map: " + map);
         databaseRef.updateChildren(map, new DatabaseReference.CompletionListener() {
             @Override
@@ -273,12 +272,13 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
                 if (databaseError != null)
                     handleDatabaseError(databaseError);
                 else
-                    Toast.makeText(ViewGroupActivity.this, R.string.success_user_exiting_message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewGroupActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void exitGroup() {
+    private void deleteMember(final String userId, final String message) {
+        // TODO: delete member
         /* Pathes for exiting groups
         1. group_users/group_key/users/current_user_id
         2. user_groups/current_user_id/groups/group_key
@@ -292,18 +292,17 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
         7. delete all of the tasks in the group
 
         For lack of time, only 1,2,3,4 is implemented
-
          */
 
-        String groupUsersPath = DBConstants.groupUsersPath+ "/" + groupKey + "/" + DBConstants.groupUsersUsersKey + "/" + getCurrentUser().getUid();
-        String userGroupsPath = DBConstants.userGroupsPath + "/" + getCurrentUser().getUid() + "/" + DBConstants.userGroupsGroupsKey + "/" + groupKey;
+        String groupUsersPath = DBConstants.groupUsersPath+ "/" + groupKey + "/" + DBConstants.groupUsersUsersKey + "/" + userId;
+        String userGroupsPath = DBConstants.userGroupsPath + "/" + userId + "/" + DBConstants.userGroupsGroupsKey + "/" + groupKey;
 
         final Map<String, Object> map = new HashMap<>();
         map.put(groupUsersPath, null);
         map.put(userGroupsPath, null);
 
-        if (group.getAdmin().equals(getCurrentUser().getUid())) {
-            // Add pathes to update the admin
+        if (group.getAdmin().equals(userId)) {
+            // Add paths to update the admin
             // First, check if there is any other member on the group
             databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey).limitToFirst(2).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -313,15 +312,15 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
                         DataSnapshot firstMemberDS = iterator.next();
                         String newAdmin = firstMemberDS.getKey();
                         Log.i(TAG, "onDataChange: The new admin is " + newAdmin);
-                        if (newAdmin.equals(getCurrentUser().getUid())) {
+                        if (newAdmin.equals(userId)) {
                             // Get the second one
                             newAdmin = iterator.next().getKey();
                             Log.i(TAG, "onDataChange: Never mind, the new admin is " + newAdmin);
                         }
                         map.put(DBConstants.groupsPath + "/" + groupKey + "/" + DBConstants.groupsAdminKey, newAdmin);
-                        update(map);
+                        update(map, message);
                     } else { // only the admin on the group
-                        update(map);
+                        update(map, message);
                     }
                 }
 
@@ -331,37 +330,18 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
                 }
             });
         } else {
-            update(map);
+            update(map, message);
         }
+    }
 
-//        databaseRef.updateChildren(map, new DatabaseReference.CompletionListener() {
-//            @Override
-//            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-//                Toast.makeText(ViewGroupActivity.this, R.string.success_user_exiting_message, Toast.LENGTH_SHORT).show();
-//                // Check if the deleted member is the admin
-//                if (group.getAdmin().equals(getCurrentUser().getUid())) {
-//                    // Update the group admin to another member
-//                    databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey).limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            if (dataSnapshot.exists()) {
-//                                // Update the group with the first member
-//                                groupRef.child(DBConstants.groupsAdminKey).setValue();
-//                            } else {
-//                                // No other members (Delete the group)
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//                }
-//
-//            }
-//        });
+    private void exitGroup() {
+        VerificationDialogFragment.getInstance(getString(R.string.exit_group_verification), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
+            @Override
+            public void onYes() {
+                deleteMember(getCurrentUser().getUid(), getString(R.string.success_user_exiting_message));
+            }
 
+        }).show(getSupportFragmentManager(), VerificationDialogFragment.class.getName());
     }
 
 }
