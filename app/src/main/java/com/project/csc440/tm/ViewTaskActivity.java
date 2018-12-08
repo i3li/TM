@@ -26,11 +26,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ViewTaskActivity extends TMFBActivity {
+public class ViewTaskActivity extends InGroupActivity {
 
     private static final String TAG = "ViewTaskActivity";
 
-    public static final String GROUP_KEY_KEY = "_group_key_";
     public static final String TASK_KEY_KEY = "_task_key_";
     public static final String TASK_NAME_KEY = "_task_name_";
 
@@ -58,7 +57,7 @@ public class ViewTaskActivity extends TMFBActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        groupKey = intent.getStringExtra(GROUP_KEY_KEY);
+        groupKey = getGroupKey();
         taskKey = intent.getStringExtra(TASK_KEY_KEY);
         setTitle(intent.getStringExtra(TASK_NAME_KEY));
         taskRef = databaseRef.child(DBConstants.tasksPath).child(taskKey);

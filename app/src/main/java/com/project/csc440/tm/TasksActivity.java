@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItemClickListener {
+public class TasksActivity extends InGroupActivity implements TasksAdapter.TaskItemClickListener {
 
     // Constants
     /**
@@ -38,9 +38,8 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
     private static final int RC_CREATE_TASK = 1;
 
     /**
-     * These constant is used to pass data from the prev activity. It is used by the caller activity to pass the group key and group name.
+     * These constant is used to pass data from the prev activity. It is used by the caller activity to pass the group name.
      */
-    public static final String GROUP_KEY_KEY = "_group_key_";
     public static final String GROUP_NAME_KEY = "_group_name_";
 
     // Views
@@ -55,13 +54,7 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
     /* -----                         ----- */
 
     private TasksAdapter adapter;
-    private ValueEventListener membershipListener;
-    private DatabaseReference membershipRef;
 
-    /**
-     * The key for the current group.
-     */
-    private String groupKey;
     private String groupName;
 
     @Override
@@ -69,16 +62,11 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
         super.onCreate(savedInstanceState);
         setupViews();
         Intent intent = getIntent();
-        if (intent.hasExtra(GROUP_KEY_KEY)) {
-            if (intent.hasExtra(GROUP_NAME_KEY)) {
-                setTitle(intent.getStringExtra(GROUP_NAME_KEY));
-                groupName = intent.getStringExtra(GROUP_NAME_KEY);
-            }
-            groupKey = intent.getStringExtra(GROUP_KEY_KEY);
-            membershipRef = databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey).child(getCurrentUser().getUid());
-            setupViewsForTasks();
-        } else
-            Log.e(TAG, "The group key must be passed in.");
+        if (intent.hasExtra(GROUP_NAME_KEY)) {
+            setTitle(intent.getStringExtra(GROUP_NAME_KEY));
+            groupName = intent.getStringExtra(GROUP_NAME_KEY);
+        }
+        setupViewsForTasks();
     }
 
     @Override
@@ -102,8 +90,6 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
         super.onStart();
 //        if (adapter != null)
 //            adapter.startListening();
-        if (membershipListener == null)
-            listenToMembership();
     }
 
     @Override
@@ -111,10 +97,6 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
         super.onStop();
 //        if (adapter != null)
 //            adapter.stopListening();
-        if (membershipListener != null) {
-            membershipRef.removeEventListener(membershipListener);
-            membershipListener = null;
-        }
     }
 
     @Override
@@ -135,25 +117,12 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
         switch (item.getItemId()) {
             case R.id.menu_group_details:
                 Intent intent = new Intent(this, ViewGroupActivity.class);
-                intent.putExtra(ViewGroupActivity.GROUP_KEY_KEY, groupKey);
+                intent.putExtra(ViewGroupActivity.GROUP_KEY_KEY, getGroupKey());
                 intent.putExtra(ViewGroupActivity.GROUP_NAME_KEY, groupName);
                 startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void listenToMembership() {
-        membershipListener = membershipRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) // Current user got deleted from the group
-                    finish();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
     }
 
     /**
@@ -209,7 +178,7 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
         final DatabaseReference tasksRef = databaseRef.child(DBConstants.tasksPath);
 
         // Query for tasks that in the group
-        final Query groupTasksQuery = databaseRef.child(DBConstants.groupTasksPath).child(groupKey).child(DBConstants.groupTasksTasksKey);
+        final Query groupTasksQuery = databaseRef.child(DBConstants.groupTasksPath).child(getGroupKey()).child(DBConstants.groupTasksTasksKey);
 
         groupTasksQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -259,7 +228,7 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
 
         // Paths
         String tasksPath = DBConstants.tasksPath + "/" + newTaskKey;
-        String groupTasksPath = DBConstants.groupTasksPath + "/" + groupKey + "/" + DBConstants.groupTasksTasksKey + "/" + newTaskKey;
+        String groupTasksPath = DBConstants.groupTasksPath + "/" + getGroupKey() + "/" + DBConstants.groupTasksTasksKey + "/" + newTaskKey;
 
         // To push in all places atomically
         Map<String, Object> allInserts = new HashMap<>();
@@ -285,7 +254,7 @@ public class TasksActivity extends TMFBActivity implements TasksAdapter.TaskItem
     @Override
     public void onTaskItemClick(String taskKey, String taskName) {
         Intent intent = new Intent(this, ViewTaskActivity.class);
-        intent.putExtra(ViewTaskActivity.GROUP_KEY_KEY, groupKey);
+        intent.putExtra(ViewTaskActivity.GROUP_KEY_KEY, getGroupKey());
         intent.putExtra(ViewTaskActivity.TASK_KEY_KEY, taskKey);
         intent.putExtra(ViewTaskActivity.TASK_NAME_KEY, taskName);
         startActivity(intent);

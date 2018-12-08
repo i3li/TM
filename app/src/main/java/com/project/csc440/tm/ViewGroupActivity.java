@@ -27,13 +27,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.MemberDeleteClickListener {
+public class ViewGroupActivity extends InGroupActivity implements MembersAdapter.MemberDeleteClickListener {
 
     private static final String TAG = "ViewGroupActivity";
 
     private static final int RC_ADD_MEMBER = 1;
 
-    public static final String GROUP_KEY_KEY = "_group_key_";
     public static final String GROUP_NAME_KEY = "_group_name_";
 
     private ScrollView descScrollView;
@@ -44,12 +43,12 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
 
     private MembersAdapter adapter;
 
-    private DatabaseReference groupRef, membershipRef;
+    private DatabaseReference groupRef;
 
     private String groupKey;
     private Group group;
 
-    private ValueEventListener groupListener, membershipListener;
+    private ValueEventListener groupListener;
 
     @Override
     int getLayoutResource() {
@@ -60,10 +59,9 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        groupKey = intent.getStringExtra(GROUP_KEY_KEY);
+        groupKey = getGroupKey();
         setTitle(intent.getStringExtra(GROUP_NAME_KEY));
         groupRef = databaseRef.child(DBConstants.groupsPath).child(groupKey);
-        membershipRef = databaseRef.child(DBConstants.groupUsersPath).child(groupKey).child(DBConstants.groupUsersUsersKey).child(getCurrentUser().getUid());
         setupViews();
     }
 
@@ -72,8 +70,6 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         super.onStart();
         if (groupListener == null)
             loadGroupInfo();
-        if (membershipListener == null)
-            listenToMembership();
     }
 
     @Override
@@ -82,10 +78,6 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         if (groupListener != null) {
             groupRef.removeEventListener(groupListener);
             groupListener = null;
-        }
-        if (membershipListener != null) {
-            membershipRef.removeEventListener(membershipListener);
-            membershipListener = null;
         }
     }
 
@@ -174,19 +166,6 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         membersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter.startListening();
 
-    }
-
-    private void listenToMembership() {
-        membershipListener = membershipRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) // Current user got deleted from the group
-                    finish();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
     }
 
     private void loadGroupInfo() {
