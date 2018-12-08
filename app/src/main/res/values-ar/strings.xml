@@ -39,8 +39,9 @@
     <string name="success_deleting_member_message">تم حذف %1$s من المجموعة بنجاح</string>
     <string name="assign_to">العضو المكلف:</string>
     <string name="details">تفاصيل:</string>
-    <string name="not_assigned_yet">لم يتم التعيين بعد</string>
-    <string name="success_member_assignment">تم تعيين %1$s على المهمة بنجاح</string>
+    <string name="not_assigned_yet">لم يتم تكليف أي أحد بعد</string>
+    <string name="success_member_assignment">تم تكليف %1$s على المهمة بنجاح</string>
+    <string name="success_current_member_assignment">تم تكليفك على المهمة بنجاح</string>
     <string name="assign">تعيين</string>
     <string name="mark_as_accomplished">تعليمها كمهمة منجزه</string>
     <string name="user_name_hint">أدخل أسمك</string>

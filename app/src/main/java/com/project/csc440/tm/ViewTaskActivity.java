@@ -112,7 +112,7 @@ public class ViewTaskActivity extends InGroupActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SELECT_MEMBER) {
             if (resultCode == RESULT_OK) {
-                String memberId = data.getStringExtra(SelectMemberActivity.MEMBER_KEY_KEY);
+                final String memberId = data.getStringExtra(SelectMemberActivity.MEMBER_KEY_KEY);
                 final String memberName = data.getStringExtra(SelectMemberActivity.MEMBER_NAME_KEY);
                 Log.i(TAG, "onActivityResult: The selected member is: " + memberId + ":" + memberName);
                 // Add the member
@@ -122,7 +122,7 @@ public class ViewTaskActivity extends InGroupActivity {
                         if (databaseError != null)
                             handleDatabaseError(databaseError);
                         else
-                            Toast.makeText(ViewTaskActivity.this, getString(R.string.success_member_assignment, memberName), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ViewTaskActivity.this, memberId.equals(getCurrentUser().getUid()) ? getString(R.string.success_current_member_assignment) : getString(R.string.success_member_assignment, memberName), Toast.LENGTH_LONG).show();
                     }
                 });
             }
