@@ -163,6 +163,7 @@ public class ViewTaskActivity extends TMFBActivity {
             if (task.getOwner().equals(getCurrentUser().getUid()))
                 assignButton.setVisibility(View.VISIBLE);
         } else {
+            assignButton.setVisibility(View.GONE);
             databaseRef.child(DBConstants.usersPath).child(task.getAssignee()).child(DBConstants.usersNameKey).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
