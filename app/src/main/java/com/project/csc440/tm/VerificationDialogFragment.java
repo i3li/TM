@@ -22,7 +22,6 @@ public class VerificationDialogFragment extends DialogFragment {
 
     interface VerificationDialogFragmentListener {
         void onYes();
-        void onNo();
     }
 
     private VerificationDialogFragmentListener verificationDialogFragmentListener;
@@ -42,10 +41,7 @@ public class VerificationDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton(noLabel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (verificationDialogFragmentListener != null)
-                            verificationDialogFragmentListener.onNo();
-                    }
+                    public void onClick(DialogInterface dialog, int which) {}
                 });
         return builder.create();
     }

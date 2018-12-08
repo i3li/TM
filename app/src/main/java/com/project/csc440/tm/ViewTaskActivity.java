@@ -94,8 +94,13 @@ public class ViewTaskActivity extends TMFBActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                // TODO: imp
-                Log.i(TAG, "onOptionsItemSelected: Delete");
+                VerificationDialogFragment.getInstance(getString(R.string.delete_task_verification), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
+                    @Override
+                    public void onYes() {
+                        // TODO: Delete
+                    }
+
+                }).show(getSupportFragmentManager(), VerificationDialogFragment.class.getName());
                 return true;
         }
         return super.onOptionsItemSelected(item);
