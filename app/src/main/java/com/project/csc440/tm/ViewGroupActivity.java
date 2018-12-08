@@ -34,10 +34,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ViewGroupActivity extends TMFBActivity {
+public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.MemberDeleteClickListener {
 
     private static final String TAG = "ViewGroupActivity";
 
@@ -159,7 +160,7 @@ public class ViewGroupActivity extends TMFBActivity {
         FirebaseRecyclerOptions<UserProfile> options = new FirebaseRecyclerOptions.Builder<UserProfile>().setIndexedQuery(groupMembersQuery, usersRef, UserProfile.class).build();
         if (adapter != null)
             adapter.stopListening();
-        adapter = new MembersAdapter(options, null, group.getAdmin(), group.getAdmin().equals(getCurrentUser().getUid()));
+        adapter = new MembersAdapter(options, null, group.getAdmin(), group.getAdmin().equals(getCurrentUser().getUid()), getCurrentUser().getUid().equals(group.getAdmin()) ? this : null);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -263,4 +264,9 @@ public class ViewGroupActivity extends TMFBActivity {
         
     }
 
+    @Override
+    public void onMemberDeleteClick(String userId, String username) {
+        // TODO: delete member
+        Log.i(TAG, "onMemberDeleteClick: Delete Member " + userId + ":" + username);
+    }
 }

@@ -18,7 +18,13 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
         void onMemberItemClick(String userId, String username);
     }
 
+    interface MemberDeleteClickListener {
+        void onMemberDeleteClick(String userId, String username);
+    }
+
     private final MemberItemClickListener memberItemClickListener;
+    private final MemberDeleteClickListener memberDeleteClickListener;
+
     private String adminKey;
     private boolean isCurrentUserAdmin = false;
 
@@ -30,13 +36,23 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
         private ImageView adminIndicatorImageView;
         private ImageButton deleteImageButton;
 
-        MemberHolder(@NonNull View itemView) {
+        MemberHolder(@NonNull final View itemView) {
             super(itemView);
             firstLetterTextView = itemView.findViewById(R.id.tv_member_first_letter);
             nameTextView = itemView.findViewById(R.id.tv_member_name);
             emailTextView = itemView.findViewById(R.id.tv_member_email);
             adminIndicatorImageView = itemView.findViewById(R.id.iv_admin_indicator);
             deleteImageButton = itemView.findViewById(R.id.btn_delete_member);
+            if (memberDeleteClickListener != null) {
+                deleteImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int clickedPos = getAdapterPosition();
+                        TextView clickedMemberNameTextView = itemView.findViewById(R.id.tv_member_name);
+                        memberDeleteClickListener.onMemberDeleteClick(getRef(clickedPos).getKey(), clickedMemberNameTextView.getText().toString());
+                    }
+                });
+            }
             itemView.setOnClickListener(this);
         }
 
@@ -67,11 +83,12 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
         }
     }
 
-    MembersAdapter(@NonNull FirebaseRecyclerOptions<UserProfile> options, MemberItemClickListener memberItemClickListener, String adminKey, boolean isCurrentUserAdmin) {
+    MembersAdapter(@NonNull FirebaseRecyclerOptions<UserProfile> options, MemberItemClickListener memberItemClickListener, String adminKey, boolean isCurrentUserAdmin, MemberDeleteClickListener memberDeleteClickListener) {
         super(options);
         this.memberItemClickListener = memberItemClickListener;
         this.adminKey = adminKey;
         this.isCurrentUserAdmin = isCurrentUserAdmin;
+        this.memberDeleteClickListener = memberDeleteClickListener;
     }
 
     @NonNull

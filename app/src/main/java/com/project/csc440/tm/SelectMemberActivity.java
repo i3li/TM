@@ -48,7 +48,7 @@ public class SelectMemberActivity extends TMFBActivity implements MembersAdapter
         FirebaseRecyclerOptions<UserProfile> options = new FirebaseRecyclerOptions.Builder<UserProfile>().setIndexedQuery(groupMembersQuery, usersRef, UserProfile.class).build();
         if (adapter != null)
             adapter.stopListening();
-        adapter = new MembersAdapter(options, this, null, false);
+        adapter = new MembersAdapter(options, this, null, false, null);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
