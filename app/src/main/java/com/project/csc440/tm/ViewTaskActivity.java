@@ -186,7 +186,7 @@ public class ViewTaskActivity extends InGroupActivity {
             dueDateTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        if (task.getAssignee() == null || !task.getAssignee().equals(getCurrentUser().getUid()))
+        if (task.getAssignee() == null || !task.getAssignee().equals(getCurrentUser().getUid()) || task.isAccomplished())
             accomplishButton.setVisibility(View.GONE);
         else
             accomplishButton.setVisibility(View.VISIBLE);
