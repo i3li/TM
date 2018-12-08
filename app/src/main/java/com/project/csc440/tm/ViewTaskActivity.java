@@ -50,6 +50,7 @@ public class ViewTaskActivity extends TMFBActivity {
     private TextView dueDateTextView, assignedToTextView, detailsTextView;
     private LinearLayout detailsLinearLayout;
     private Button assignButton, accomplishButton;
+    private MenuItem deleteMenuItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +80,28 @@ public class ViewTaskActivity extends TMFBActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_task, menu);
+        deleteMenuItem = menu.findItem(R.id.menu_delete);
+        if (task != null) {
+            Log.i(TAG, "onCreateOptionsMenu: Task not null");
+            deleteMenuItem.setVisible(getCurrentUser().getUid().equals(task.getOwner()));
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_delete:
+                // TODO: imp
+                Log.i(TAG, "onOptionsItemSelected: Delete");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SELECT_MEMBER) {
@@ -86,7 +109,7 @@ public class ViewTaskActivity extends TMFBActivity {
                 String memberId = data.getStringExtra(SelectMemberActivity.MEMBER_KEY_KEY);
                 final String memberName = data.getStringExtra(SelectMemberActivity.MEMBER_NAME_KEY);
                 Log.i(TAG, "onActivityResult: The selected member is: " + memberId + ":" + memberName);
-                // TODO: Add the member
+                // Add the member
                 taskRef.child(DBConstants.taskAssigneeKey).setValue(memberId, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
