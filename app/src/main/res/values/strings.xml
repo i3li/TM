@@ -39,4 +39,6 @@
     <string name="details">Details:</string>
     <string name="not_assigned_yet">Not assigned yet</string>
     <string name="success_member_assignment">is successfully assigned to the task</string>
+    <string name="assign">Assign</string>
+    <string name="mark_as_accomplished">Mark as accomplished</string>
 </resources>

@@ -29,7 +29,7 @@
                 android:background="@color/colorPrimary"
                 android:textColor="#FFF"
                 android:padding="8dp"
-                android:text="Assign" />
+                android:text="@string/assign" />
 
             <Button
                 android:id="@+id/btn_accomplish"
@@ -40,7 +40,7 @@
                 android:padding="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="Mark as accomplished" />
+                android:text="@string/mark_as_accomplished" />
 
         </LinearLayout>
 
@@ -61,7 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="22/22/2018 12:12 PM" />
+                android:text="22/22/2018 12:12 PM"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -82,7 +83,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="Ali Za" />
+                android:text="Ali Za"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -108,7 +110,8 @@
                     android:id="@+id/tv_task_view_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No details"/>
+                    android:text="No details"
+                    tools:ignore="HardcodedText" />
 
             </ScrollView>
         </LinearLayout>

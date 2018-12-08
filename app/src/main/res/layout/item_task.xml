@@ -44,7 +44,7 @@
                 android:textSize="14sp"
                 android:text="01/02/2019 12:09 PM"
                 android:layout_gravity="center_vertical"
-                 />
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
