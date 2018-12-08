@@ -7,7 +7,6 @@
     <string name="connection_error">Please check your internet connection and try again.</string>
     <string name="no_tasks">There are no tasks.\nCreate the first task by tapping the + button down below.</string>
     <string name="no_groups">There are no groups.\nCreate the first group by tapping the + button down below.</string>
-    <string name="groups_title">Groups</string>
     <string name="group_name_hint">Enter the group name</string>
     <string name="group_desc_hint">Enter the group description</string>
     <string name="create_group_title">Create Group</string>
