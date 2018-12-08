@@ -278,7 +278,6 @@ public class ViewGroupActivity extends InGroupActivity implements MembersAdapter
     }
 
     private void deleteMember(final String userId, final String message) {
-        // TODO: delete member
         /* Pathes for exiting groups
         1. group_users/group_key/users/current_user_id
         2. user_groups/current_user_id/groups/group_key
