@@ -67,23 +67,6 @@ public class ViewTaskActivity extends TMFBActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.view_task, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_accomplish:
-                return true;
-            case R.id.menu_assign:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setupViews() {
         dueDateTextView = findViewById(R.id.tv_task_view_due_date);
         assignedToTextView = findViewById(R.id.tv_task_view_assigned_to_member_name);
