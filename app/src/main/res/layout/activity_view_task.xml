@@ -29,7 +29,8 @@
                 android:background="@color/colorPrimary"
                 android:textColor="#FFF"
                 android:padding="8dp"
-                android:text="@string/assign" />
+                android:text="@string/assign"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/btn_accomplish"
@@ -40,7 +41,8 @@
                 android:padding="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@string/mark_as_accomplished" />
+                android:text="@string/mark_as_accomplished"
+                tools:ignore="ButtonStyle" />
 
         </LinearLayout>
 
