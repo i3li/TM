@@ -159,7 +159,7 @@ public class ViewGroupActivity extends TMFBActivity {
         FirebaseRecyclerOptions<UserProfile> options = new FirebaseRecyclerOptions.Builder<UserProfile>().setIndexedQuery(groupMembersQuery, usersRef, UserProfile.class).build();
         if (adapter != null)
             adapter.stopListening();
-        adapter = new MembersAdapter(options, null, group.getAdmin());
+        adapter = new MembersAdapter(options, null, group.getAdmin(), group.getAdmin().equals(getCurrentUser().getUid()));
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
 
     private final MemberItemClickListener memberItemClickListener;
     private String adminKey;
+    private boolean isCurrentUserAdmin = false;
 
     class MemberHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -26,6 +28,7 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
         private TextView nameTextView;
         private TextView emailTextView;
         private ImageView adminIndicatorImageView;
+        private ImageButton deleteImageButton;
 
         MemberHolder(@NonNull View itemView) {
             super(itemView);
@@ -33,6 +36,7 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
             nameTextView = itemView.findViewById(R.id.tv_member_name);
             emailTextView = itemView.findViewById(R.id.tv_member_email);
             adminIndicatorImageView = itemView.findViewById(R.id.iv_admin_indicator);
+            deleteImageButton = itemView.findViewById(R.id.btn_delete_member);
             itemView.setOnClickListener(this);
         }
 
@@ -45,8 +49,13 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
             emailTextView.setText(email);
         }
 
-        void setAdminIndicator(boolean isAdmin) {
-            adminIndicatorImageView.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+        void setAdminIndicator(boolean isAdmin, boolean isCurrentUserAdmin) {
+            if (isAdmin)
+                adminIndicatorImageView.setVisibility(View.VISIBLE);
+            else {
+                adminIndicatorImageView.setVisibility(View.GONE);
+                deleteImageButton.setVisibility(isCurrentUserAdmin ? View.VISIBLE : View.GONE);
+            }
         }
 
         @Override
@@ -58,10 +67,11 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
         }
     }
 
-    MembersAdapter(@NonNull FirebaseRecyclerOptions<UserProfile> options, MemberItemClickListener memberItemClickListener, String adminKey) {
+    MembersAdapter(@NonNull FirebaseRecyclerOptions<UserProfile> options, MemberItemClickListener memberItemClickListener, String adminKey, boolean isCurrentUserAdmin) {
         super(options);
         this.memberItemClickListener = memberItemClickListener;
         this.adminKey = adminKey;
+        this.isCurrentUserAdmin = isCurrentUserAdmin;
     }
 
     @NonNull
@@ -75,6 +85,6 @@ class MembersAdapter extends FirebaseRecyclerAdapter<UserProfile, MembersAdapter
     protected void onBindViewHolder(@NonNull MemberHolder holder, int position, @NonNull UserProfile model) {
         holder.setName(model.getName());
         holder.setEmail(model.getEmail());
-        holder.setAdminIndicator(getRef(position).getKey().equals(adminKey));
+        holder.setAdminIndicator(getRef(position).getKey().equals(adminKey), isCurrentUserAdmin);
     }
 }
