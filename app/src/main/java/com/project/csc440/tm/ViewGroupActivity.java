@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -111,7 +112,13 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         switch (item.getItemId()) {
             case R.id.menu_exit:
                 // TODO: imp
-                Log.i(TAG, "onOptionsItemSelected: Exit");
+                VerificationDialogFragment.getInstance(getString(R.string.exit_group_verification), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
+                    @Override
+                    public void onYes() {
+                        exitGroup();
+                    }
+
+                }).show(getSupportFragmentManager(), VerificationDialogFragment.class.getName());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -269,4 +276,28 @@ public class ViewGroupActivity extends TMFBActivity implements MembersAdapter.Me
         // TODO: delete member
         Log.i(TAG, "onMemberDeleteClick: Delete Member " + userId + ":" + username);
     }
+
+    private void exitGroup() {
+        /* Two places for exiting groups
+        1. group_users/group_key/users/current_user_id
+        2. user_groups/current_user_id/groups/group_key
+         */
+
+        String groupUsersPath = DBConstants.groupUsersPath+ "/" + groupKey + "/" + DBConstants.groupUsersUsersKey + "/" + getCurrentUser().getUid();
+        String userGroupsPath = DBConstants.userGroupsPath + "/" + getCurrentUser().getUid() + "/" + DBConstants.userGroupsGroupsKey + "/" + groupKey;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(groupUsersPath, null);
+        map.put(userGroupsPath, null);
+
+        databaseRef.updateChildren(map, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                Toast.makeText(ViewGroupActivity.this, R.string.success_user_exiting_message, Toast.LENGTH_SHORT).show();
+                // TODO: Check if the deleted member is the admin
+            }
+        });
+
+    }
+
 }
