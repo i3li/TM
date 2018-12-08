@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:text="Member name"
-            android:layout_gravity="center_vertical"
             tools:ignore="HardcodedText" />
 
         <TextView
@@ -43,7 +42,6 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:text="Member email"
-            android:layout_gravity="center_vertical"
             tools:ignore="HardcodedText" />
 
         </LinearLayout>
