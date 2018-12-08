@@ -19,6 +19,7 @@
     <string name="task_details_hint">Enter the task details</string>
     <string name="past_due_date_error">The due date of a task must be in the future</string>
     <string name="success_task_creation_message">The task is successfully created</string>
+    <string name="success_task_deletion_message">The task is successfully deletd</string>
     <string name="due_date">Due Date:</string>
     <string name="more">More</string>
     <string name="desc">Description</string>

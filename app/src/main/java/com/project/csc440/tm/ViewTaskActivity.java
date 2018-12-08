@@ -23,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewTaskActivity extends TMFBActivity {
 
@@ -97,7 +99,7 @@ public class ViewTaskActivity extends TMFBActivity {
                 VerificationDialogFragment.getInstance(getString(R.string.delete_task_verification), getString(R.string.yes), getString(R.string.no), new VerificationDialogFragment.VerificationDialogFragmentListener() {
                     @Override
                     public void onYes() {
-                        // TODO: Delete
+                        deleteTask();
                     }
 
                 }).show(getSupportFragmentManager(), VerificationDialogFragment.class.getName());
@@ -215,8 +217,11 @@ public class ViewTaskActivity extends TMFBActivity {
         taskListener = taskRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Task task = dataSnapshot.getValue(Task.class);
-                updateFieldsWithTask(task);
+                if (dataSnapshot.exists()) {
+                    Task task = dataSnapshot.getValue(Task.class);
+                    updateFieldsWithTask(task);
+                } else
+                    finish();
             }
 
             @Override
@@ -226,5 +231,25 @@ public class ViewTaskActivity extends TMFBActivity {
         });
     }
 
+    private void deleteTask() {
+        /* Two places for deleting tasks
+        1. /tasks/
+        2. group_tasks/current_group_id/current_task_id
+         */
+        String taskPath = DBConstants.tasksPath + "/" + taskKey;
+        String groupTasksPath = DBConstants.groupTasksPath + "/" + groupKey + "/" + DBConstants.groupTasksTasksKey + "/" + taskKey;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(taskPath, null);
+        map.put(groupTasksPath, null);
+
+        databaseRef.updateChildren(map, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                Toast.makeText(ViewTaskActivity.this, R.string.success_task_deletion_message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
 
 }
